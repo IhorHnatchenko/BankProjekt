@@ -2,18 +2,15 @@ package org.example.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.example.enums.Currency;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "product")
 public class Product {
@@ -27,16 +24,35 @@ public class Product {
 
     private int status;
 
-    private int currency_code;
+    @Enumerated(EnumType.STRING)
+    private Currency currencyCode;
 
-    private BigDecimal interest_rate;
+    private BigDecimal interestRate;
 
-    private int limit_db;
+    private int limitDB;
 
-    private Timestamp create_at;
-    private Timestamp update_at;
+    private Timestamp createAt;
+    private Timestamp updateAt;
 
-    //@ManyToOne
-    @Transient
+
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "managerId", referencedColumnName = "id")
     private Manager manager;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "agreementId", referencedColumnName = "id")
+    private Agreement agreement;
+
+
+    /*    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    private UserProfile userProfile;
+*/
+
+    public Product(String name, Currency currencyCode, int limitDB) {
+        this.name = name;
+        this.currencyCode = currencyCode;
+        this.limitDB = limitDB;
+    }
 }

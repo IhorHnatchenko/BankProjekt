@@ -13,5 +13,10 @@ public interface ClientService {
 
     Client getById(long clientId);
 
-    Client add(Client client);
+    Client save(Client client);
+
+    Client updatePhoneNumber(long clientId, int phoneNumber);
+
+    Client updateStatus(long clientId, int status);
+
 }

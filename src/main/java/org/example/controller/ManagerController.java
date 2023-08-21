@@ -1,34 +1,42 @@
 package org.example.controller;
 
-import org.example.entities.Client;
-import org.example.entities.Manager;
+import org.example.dto.ManagerDto;
 import org.example.service.ManagerService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.example.service.dtoConvertor.ManagerDtoConvertor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("managers")
 public class ManagerController {
 
-    @Autowired
-    private ManagerService managerService;
+    private final ManagerService managerService;
 
-    @GetMapping("/getAll")
-    List<Manager> getAll() {
-        return managerService.getAll();
+    private final ManagerDtoConvertor managerDtoConvertor;
+
+    public ManagerController(ManagerService managerService, ManagerDtoConvertor managerDtoConvertor) {
+        this.managerService = managerService;
+        this.managerDtoConvertor = managerDtoConvertor;
+    }
+
+    @GetMapping
+    public List<ManagerDto> getAll() {
+        return managerService.getAll()
+                .stream()
+                .map(managerDtoConvertor::toDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    Manager getById(@PathVariable(name = "id") long id){
-        return managerService.getById(id);
+    public ManagerDto getById(@PathVariable(name = "id") long id){
+        return managerDtoConvertor.toDto(managerService.getById(id));
     }
 
     @PostMapping
-    ResponseEntity<Manager> add(@RequestBody Manager manager){
-        return ResponseEntity.ok(managerService.add(manager));
+    public ManagerDto save(@RequestBody ManagerDto managerDto){
+        return managerDtoConvertor.toDto(managerService.save(managerDtoConvertor.toEntity(managerDto)));
     }
 
 }

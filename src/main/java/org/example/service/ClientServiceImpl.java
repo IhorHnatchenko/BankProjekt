@@ -1,9 +1,9 @@
 package org.example.service;
 
 
+import jakarta.persistence.EntityNotFoundException;
 import org.example.entities.Client;
 import org.example.repository.ClientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +11,11 @@ import java.util.List;
 @Service
 public class ClientServiceImpl implements ClientService {
 
-    @Autowired
-    private ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
+
+    public ClientServiceImpl(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
 
     @Override
     public List<Client> getAll() {
@@ -25,7 +28,26 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client add(Client client) {
+    public Client save(Client client) {
         return clientRepository.save(client);
     }
+
+    @Override
+    public Client updatePhoneNumber(long clientId, int phoneNumber) {
+        Client client = clientRepository.getReferenceById(clientId);
+
+        client.setPhone(phoneNumber);
+        return clientRepository.save(client);
+
+    }
+
+    @Override
+    public Client updateStatus(long clientId, int status) {
+        Client client = clientRepository.getReferenceById(clientId);
+
+        client.setStatus(status);
+        return clientRepository.save(client);
+    }
+
+
 }

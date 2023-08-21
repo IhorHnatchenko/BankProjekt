@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="202308170" author="Ihor Hnatchenko">
+        <comment>Add managers table</comment>
+        <createTable tableName="managers">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="manager_pkey"/>
+            </column>
+            <column name="status" type="BIGINT"/>
+            <column name="firstName" type="VARCHAR(255)"/>
+            <column name="lastName" type="VARCHAR(255)"/>
+            <column name="create_at" type="TIMESTAMP"/>
+            <column name="update_at" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="202308171" author="Ihor Hnatchenko">
+        <comment>Add clients table</comment>
+        <createTable tableName="clients">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="client_pkey"/>
+            </column>
+            <column name="status" type="BIGINT"/>
+            <column name="taxCode" type="VARCHAR(255)"/>
+            <column name="firstName" type="VARCHAR(255)"/>
+            <column name="lastName" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="phone" type="VARCHAR(255)"/>
+            <column name="create_at" type="TIMESTAMP"/>
+            <column name="update_at" type="TIMESTAMP"/>
+            <column name="manager_id" type="BIGINT">
+                <constraints foreignKeyName="manager_fkey"
+                             referencedTableName="managers"
+                             referencedColumnNames="id" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="202308172" author="Ihor Hnatchenko">
+        <comment>Add accounts table</comment>
+        <createTable tableName="accounts">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="accounts_pkey"/>
+            </column>
+            <column name="status" type="BIGINT"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="type" type="BIGINT"/>
+            <column name="balance" type="BIGINT"/>
+            <column name="currencyCode" type="BIGINT"/>
+            <column name="client_id" type="BIGINT">
+                <constraints foreignKeyName="client_fkey"
+                             referencedTableName="clients"
+                             referencedColumnNames="id" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+</databaseChangeLog>

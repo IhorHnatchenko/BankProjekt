@@ -1,21 +1,19 @@
 package org.example.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "client")
 public class Client {
@@ -24,36 +22,39 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-
     private int status;
-    //@NotBlank
+
+    @Column(unique = true)
     private String taxCode;
-    //@NotBlank
+
     private String firstName;
-    //@NotBlank
+
     private String lastName;
-    //@NotBlank
+
+    @Column(unique = true)
     private String email;
-    //@NotBlank
+
     private String address;
-    //@NotBlank
-    private String phone;
+
+    @Column(unique = true)
+    private int phone;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp createAt;
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp updateAt;
 
+    public Client(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
-/*      Здесь соединение один к однму, мне кажется не корректрым.
-     Так как если посмотреть со стороны менеджера, то менджер может иметь много клиентов,
-     А это означает что со стороны клиента должно быть соединение многие к одному.
-     Тоесть все клиенты определённого менеджера. */
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "manager _id", referencedColumnName = "id")
+    @JoinColumn(name = "managerId", referencedColumnName = "id")
     private Manager manager;
 
-    @OneToMany
-    @JoinColumn(name = "account_id")
-    private List<Account> account = new ArrayList<>();
+
+    @OneToMany(mappedBy = "registeredClient")
+    private List<Account> accounts = new ArrayList<>();
+
 }

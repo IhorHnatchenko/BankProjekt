@@ -1,19 +1,17 @@
 package org.example.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "manager")
 public class Manager {
@@ -25,26 +23,26 @@ public class Manager {
 
     private int status;
     @NotBlank
-    private String first_name;
+    private String firstName;
     @NotBlank
-    private String last_name;
+    private String lastName;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp create_at;
+    private Timestamp createAt;
     @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp update_at;
+    private Timestamp updateAt;
 
-    //@OneToMany
-    @Transient
-    //@JoinColumn(name = "product_id")
-    private List<Product> product;
 
-    /*
-        Здесь по идее должно быть ещё одно соединение один к многим к клиентам.
-     */
-    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL)
-//    @JoinColumn(name = "client_id")
-    private List<Client> client;
+    public Manager(String firstName, String lastName){
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
+    @OneToMany(mappedBy = "manager")
+    @JsonIgnore
+    private List<Client> clients = new ArrayList<>();
+
+    @OneToMany(mappedBy = "manager")
+    private List<Product> products = new ArrayList<>();
 
 }

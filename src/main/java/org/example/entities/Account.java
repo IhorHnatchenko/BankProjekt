@@ -2,19 +2,17 @@ package org.example.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.example.enums.Currency;
 
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "account")
 public class Account {
@@ -28,18 +26,26 @@ public class Account {
     private String name;
     private int type;
     private BigDecimal balance;
-    private int currency_code;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp create_at;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp update_at;
+    @Enumerated(EnumType.STRING)
+    private Currency currencyCode;
 
-    @Transient
-    //@ManyToOne
-    private Client client;
+    public Account(String name, BigDecimal balance) {
+        this.name = name;
+        this.balance = balance;
+    }
 
-    @Transient
-    //@ManyToOne
-    private Agreement agreement;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "clientId", referencedColumnName = "id")
+    private Client registeredClient;
+
+    @OneToMany(mappedBy = "debitAccount")
+    private List<Transaction> debit_transactions = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "creditAccount")
+    private List<Transaction> credit_transactions = new ArrayList<>();
+
+
+
 }

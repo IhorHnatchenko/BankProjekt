@@ -1,18 +1,14 @@
 package org.example.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "transaction")
 public class Transaction {
@@ -30,18 +26,30 @@ public class Transaction {
     private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp create_at;
+    private Timestamp createAt;
 
-    /*
-    Я понял что одна тронзакция имеет одни конкретный счёт, но если смотреть со стороны счёта,
-    то одни конкрентый счёт может иметь много транзакций.
-    Означает ли это что в таблице транзакций, нам нужно сделать соединение одни к моногому?
-     */
-    @OneToOne
+
+    public Transaction(BigDecimal amount, String description) {
+        this.amount = amount;
+        this.description = description;
+    }
+
+    public Transaction(BigDecimal amount, String description, Account debit_account, Account credit_account) {
+        this.amount = amount;
+        this.description = description;
+        this.debitAccount = debit_account;
+        this.creditAccount = credit_account;
+    }
+
+    // Проверить связи.
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "debit_account_id", referencedColumnName = "id")
-    private Account debit_account;
+    private Account debitAccount;
 
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "credit_account_id", referencedColumnName = "id")
-    private Account credit_account;
+    private Account creditAccount;
+
+
+
 }

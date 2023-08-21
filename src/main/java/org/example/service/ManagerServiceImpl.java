@@ -10,8 +10,11 @@ import java.util.List;
 @Service
 public class ManagerServiceImpl implements ManagerService {
 
-    @Autowired
-    private ManagerRepository managerRepository;
+    private final ManagerRepository managerRepository;
+
+    public ManagerServiceImpl(ManagerRepository managerRepository) {
+        this.managerRepository = managerRepository;
+    }
 
     @Override
     public List<Manager> getAll() {
@@ -24,7 +27,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    public Manager add(Manager manager) {
+    public Manager save(Manager manager) {
         return managerRepository.save(manager);
     }
 }
