@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.example.enums.Currency;
-
-
+import org.example.enums.Status;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +13,16 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "account")
+@Table(name = "accounts")
 public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private int status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     @NotBlank
     private String name;
     private int type;

@@ -1,32 +1,33 @@
 package org.example.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.validator.constraints.UniqueElements;
-
+import org.example.enums.Status;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "client")
+@Table(name = "clients")
 public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private int status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Column(unique = true)
     private String taxCode;
 
+//    @Column(name = "firstName")
     private String firstName;
 
     private String lastName;
@@ -55,6 +56,7 @@ public class Client {
 
 
     @OneToMany(mappedBy = "registeredClient")
+    @JsonIgnore
     private List<Account> accounts = new ArrayList<>();
 
 }

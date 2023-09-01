@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.example.enums.Currency;
-
+import org.example.enums.Status;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "product")
+@Table(name = "products")
 public class Product {
 
     @Id
@@ -22,13 +22,15 @@ public class Product {
     @NotBlank
     private String name;
 
-    private int status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Enumerated(EnumType.STRING)
     private Currency currencyCode;
 
     private BigDecimal interestRate;
 
+    @Column(name = "limit_db")
     private int limitDB;
 
     private Timestamp createAt;
@@ -37,22 +39,20 @@ public class Product {
 
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "managerId", referencedColumnName = "id")
+    @JoinColumn(name = "product_manager_id", referencedColumnName = "id")
     private Manager manager;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "agreementId", referencedColumnName = "id")
-    private Agreement agreement;
-
-
-    /*    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    private UserProfile userProfile;
-*/
 
     public Product(String name, Currency currencyCode, int limitDB) {
         this.name = name;
         this.currencyCode = currencyCode;
         this.limitDB = limitDB;
     }
+
+/*    {
+        "name": "credit1",
+            "status": 1,
+            "currencyCode": "USD",
+            "interestRate": 67,
+            "limitDB": 12
+    }*/
 }

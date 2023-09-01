@@ -4,54 +4,55 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="202308170" author="Ihor Hnatchenko">
+    <changeSet id="202308300" author="Ihor Hnatchenko">
         <comment>Add managers table</comment>
         <createTable tableName="managers">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="manager_pkey"/>
             </column>
-            <column name="status" type="BIGINT"/>
-            <column name="firstName" type="VARCHAR(255)"/>
-            <column name="lastName" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
             <column name="create_at" type="TIMESTAMP"/>
             <column name="update_at" type="TIMESTAMP"/>
         </createTable>
     </changeSet>
 
-    <changeSet id="202308171" author="Ihor Hnatchenko">
+    <changeSet id="202308301" author="Ihor Hnatchenko">
         <comment>Add clients table</comment>
         <createTable tableName="clients">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="client_pkey"/>
             </column>
-            <column name="status" type="BIGINT"/>
-            <column name="taxCode" type="VARCHAR(255)"/>
-            <column name="firstName" type="VARCHAR(255)"/>
-            <column name="lastName" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="tax_code" type="VARCHAR(255)"/>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
             <column name="email" type="VARCHAR(255)"/>
             <column name="address" type="VARCHAR(255)"/>
-            <column name="phone" type="VARCHAR(255)"/>
+            <column name="phone" type="BIGINT"/>
             <column name="create_at" type="TIMESTAMP"/>
             <column name="update_at" type="TIMESTAMP"/>
             <column name="manager_id" type="BIGINT">
                 <constraints foreignKeyName="manager_fkey"
                              referencedTableName="managers"
-                             referencedColumnNames="id" nullable="false"/>
+                             referencedColumnNames="id" nullable="true"/>
             </column>
         </createTable>
     </changeSet>
 
-    <changeSet id="202308172" author="Ihor Hnatchenko">
+
+    <changeSet id="202308302" author="Ihor Hnatchenko">
         <comment>Add accounts table</comment>
         <createTable tableName="accounts">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="accounts_pkey"/>
             </column>
-            <column name="status" type="BIGINT"/>
+            <column name="status" type="VARCHAR(255)"/>
             <column name="name" type="VARCHAR(255)"/>
             <column name="type" type="BIGINT"/>
-            <column name="balance" type="BIGINT"/>
-            <column name="currencyCode" type="BIGINT"/>
+            <column name="balance" type="DECIMAL"/>
+            <column name="currency_code" type="VARCHAR(4)"/>
             <column name="client_id" type="BIGINT">
                 <constraints foreignKeyName="client_fkey"
                              referencedTableName="clients"
@@ -60,5 +61,262 @@
         </createTable>
     </changeSet>
 
+<!--    С этим пока повременим.-->
+    <!--    <changeSet id="202308262" author="Ihor Hnatchenko">
+        <comment>Add foreign key from accounts to clients</comment>
+        <addForeignKeyConstraint baseTableName="accounts"
+                                 baseColumnNames="client_id"
+                                 constraintName="accounts_client_fkey"
+                                 referencedTableName="clients"
+                                 referencedColumnNames="id"/>
+    </changeSet>-->
+
+    <changeSet id="202308303" author="Ihor Hnatchenko">
+        <comment>Add product table</comment>
+        <createTable tableName="products">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="product_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="currency_code" type="VARCHAR(255)"/>
+            <column name="interest_rate" type="DECIMAL"/>
+            <column name="limit_db" type="DECIMAL"/>
+            <column name="create_at" type="TIMESTAMP"/>
+            <column name="update_at" type="TIMESTAMP"/>
+            <column name="product_manager_id" type="BIGINT">
+                <constraints foreignKeyName="product_manager_fkey"
+                             referencedTableName="managers"
+                             referencedColumnNames="id" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+
+
+    <changeSet id="202308304" author="Ihor Hnatchenko">
+        <comment>Add agreement table</comment>
+        <createTable tableName="agreements">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="agreement_pkey"/>
+            </column>
+            <column name="interest_rate" type="DECIMAL"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="sum" type="DECIMAL"/>
+            <column name="create_at" type="TIMESTAMP"/>
+            <column name="update_at" type="TIMESTAMP"/>
+            <column name="account_id" type="BIGINT">
+                <constraints foreignKeyName="agreement_account_fkey"
+                             referencedTableName="accounts"
+                             referencedColumnNames="id" nullable="false"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints foreignKeyName="agreement_product_fkey"
+                             referencedTableName="products"
+                             referencedColumnNames="id" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="202308305" author="Ihor Hnatchenko">
+        <comment>Add transaction table</comment>
+        <createTable tableName="transactions">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="transaction_pkey"/>
+            </column>
+            <column name="type" type="INTEGER"/>
+            <column name="amount" type="DECIMAL"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="create_at" type="TIMESTAMP"/>
+            <column name="debit_account_id" type="BIGINT">
+                <constraints foreignKeyName="debit_account_fkey"
+                             referencedTableName="accounts"
+                             referencedColumnNames="id" nullable="false"/>
+            </column>
+            <column name="credit_account_id" type="BIGINT">
+                <constraints foreignKeyName="credit_account_fkey"
+                             referencedTableName="accounts"
+                             referencedColumnNames="id" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+
+
+
+
+
+
+<!--    /////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+                <!-- INSERT TABLE -->
+
+
+        <!--    INSERT TABLE MANAGERS   -->
+    <changeSet id="202308306" author="Ihor Hnatchenko">
+        <insert tableName="managers">
+            <column name="status" value="ACTIVE"/>
+            <column name="first_name" value="John"/>
+            <column name="last_name" value="Doe"/>
+            <column name="create_at" value="2023-08-30 20:52:00"/>
+            <column name="update_at" value="null"/>
+        </insert>
+
+        <insert tableName="managers">
+            <column name="status" value="ACTIVE"/>
+            <column name="first_name" value="Alex"/>
+            <column name="last_name" value="Honkaj"/>
+            <column name="create_at" value="2023-08-30 20:52:00"/>
+            <column name="update_at" value="null"/>
+        </insert>
+
+        <insert tableName="managers">
+            <column name="status" value="ACTIVE"/>
+            <column name="first_name" value="Bob"/>
+            <column name="last_name" value="Marly"/>
+            <column name="create_at" value="2023-08-30 20:52:00"/>
+            <column name="update_at" value="null"/>
+        </insert>
+    </changeSet>
+
+
+
+
+                <!--    INSERT TABLE CLIENTS    -->
+        <changeSet id="202308307" author="Ihor Hnatchenko">
+            <insert tableName="clients">
+                <column name="status" value="ACTIVE"/>
+                <column name="tax_code" value="20011127"/>
+                <column name="first_name" value="Ihor"/>
+                <column name="last_name" value="Hnatchenko"/>
+                <column name="email" value="Ihor@gmail.com"/>
+                <column name="address" value="hello"/>
+                <column name="phone" value="509814194"/>
+                <column name="manager_id" value="1"/>
+                <column name="create_at" value="2023-08-30 21:10:00"/>
+                <column name="update_at" value="null"/>
+            </insert>
+
+            <insert tableName="clients">
+                <column name="status" value="ACTIVE"/>
+                <column name="tax_code" value="20030406"/>
+                <column name="first_name" value="Anna"/>
+                <column name="last_name" value="Hnatchenko"/>
+                <column name="email" value="Anna@gmail.com"/>
+                <column name="address" value="hello"/>
+                <column name="phone" value="675443097"/>
+                <column name="manager_id" value="1"/>
+                <column name="create_at" value="2023-08-30 21:10:00"/>
+                <column name="update_at" value="null"/>
+            </insert>
+
+            <insert tableName="clients">
+                <column name="status" value="ACTIVE"/>
+                <column name="tax_code" value="19990909"/>
+                <column name="first_name" value="Yi"/>
+                <column name="last_name" value="Honkaj"/>
+                <column name="email" value="Yi@gmail.com"/>
+                <column name="address" value="YiHome"/>
+                <column name="phone" value="674829876"/>
+                <column name="manager_id" value="2"/>
+                <column name="create_at" value="2023-08-30 21:10:00"/>
+                <column name="update_at" value="null"/>
+            </insert>
+
+            <insert tableName="clients">
+                <column name="status" value="ACTIVE"/>
+                <column name="tax_code" value="20060101"/>
+                <column name="first_name" value="Honda"/>
+                <column name="last_name" value="Matsutabe"/>
+                <column name="email" value="Honda@gmail.com"/>
+                <column name="address" value="HondaHome"/>
+                <column name="phone" value="872987361"/>
+                <column name="manager_id" value="3"/>
+                <column name="create_at" value="2023-08-30 21:10:00"/>
+                <column name="update_at" value="null"/>
+            </insert>
+
+        </changeSet>
+
+
+    <!--    INSERT TABLE ACCOUNTS    -->
+    <changeSet id="202308308" author="Ihor Hnatchenko">
+        <insert tableName="accounts">
+            <column name="status" value="ACTIVE"/>
+            <column name="name" value="Ihor"/>
+            <column name="type" value="1"/>
+            <column name="balance" value="100"/>
+            <column name="currency_code" value="USD"/>
+            <column name="client_id" value="1"/>
+        </insert>
+
+        <insert tableName="accounts">
+            <column name="status" value="ACTIVE"/>
+            <column name="name" value="Anna"/>
+            <column name="type" value="1"/>
+            <column name="balance" value="500"/>
+            <column name="currency_code" value="USD"/>
+            <column name="client_id" value="2"/>
+        </insert>
+
+        <insert tableName="accounts">
+            <column name="status" value="ACTIVE"/>
+            <column name="name" value="Honda"/>
+            <column name="type" value="1"/>
+            <column name="balance" value="4000000"/>
+            <column name="currency_code" value="JPY"/>
+            <column name="client_id" value="4"/>
+        </insert>
+    </changeSet>
+
+    <!--    INSERT TABLE PRODUCTS    -->
+    <changeSet id="202308309" author="Ihor Hnatchenko">
+        <insert tableName="products">
+            <column name="name" value="creditOneForUSD"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="currency_code" value="USD"/>
+            <column name="interest_rate" value="15"/>
+            <column name="limit_db" value="20"/>
+            <column name="product_manager_id" value="1"/>
+            <column name="create_at" value="2023-08-30 21:38:00"/>
+            <column name="update_at" value="null"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="name" value="creditOneForJPY"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="currency_code" value="JPY"/>
+            <column name="interest_rate" value="18"/>
+            <column name="limit_db" value="26"/>
+            <column name="product_manager_id" value="3"/>
+            <column name="create_at" value="2023-08-30 21:38:00"/>
+            <column name="update_at" value="null"/>
+        </insert>
+    </changeSet>
+
+
+    <!--    INSERT TABLE PRODUCTS    -->
+    <changeSet id="202308310" author="Ihor Hnatchenko">
+        <insert tableName="agreements">
+            <column name="interest_rate" value="15"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="sum" value="20"/>
+            <column name="account_id" value="1"/>
+            <column name="product_id" value="1"/>
+            <column name="create_at" value="2023-08-30 21:44:00"/>
+            <column name="update_at" value="null"/>
+        </insert>
+
+        <insert tableName="agreements">
+            <column name="interest_rate" value="18"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="sum" value="26"/>
+            <column name="account_id" value="3"/>
+            <column name="product_id" value="2"/>
+            <column name="create_at" value="2023-08-30 21:44:00"/>
+            <column name="update_at" value="null"/>
+        </insert>
+    </changeSet>
 
 </databaseChangeLog>

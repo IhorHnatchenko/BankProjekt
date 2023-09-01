@@ -1,10 +1,14 @@
 package org.example.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.example.dto.AgreementDto;
+import org.example.entities.Agreement;
+import org.example.entities.Product;
+import org.example.enums.Status;
 import org.example.service.AgreementService;
 import org.example.service.dtoConvertor.AgreementDtoConvertor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +26,7 @@ public class AgreementController {
     }
 
     @GetMapping
-    public List<AgreementDto> getAll(){
+    public List<AgreementDto> getAll() {
         return agreementService.getAll()
                 .stream()
                 .map(agreementDtoConvertor::toDto)
@@ -30,12 +34,32 @@ public class AgreementController {
     }
 
     @GetMapping("/{id}")
-    public AgreementDto getById(@PathVariable(name = "id") long id){
+    public AgreementDto getById(@PathVariable(name = "id") long id) {
+        Agreement agreement = agreementService.getById(id);
+        Product product = agreement.getProduct();
+        if (product.getStatus().equals(Status.INACTIVE) || agreement.getStatus().equals(Status.INACTIVE)) {
+            return null;
+        }
+
         return agreementDtoConvertor.toDto(agreementService.getById(id));
     }
 
     @PostMapping
-    public AgreementDto save(@RequestBody AgreementDto agreementDto){
+    public AgreementDto save(@RequestBody AgreementDto agreementDto) {
         return agreementDtoConvertor.toDto(agreementService.save(agreementDtoConvertor.toEntity(agreementDto)));
     }
+
+    @PutMapping("update/status/{id}")
+    public ResponseEntity<Agreement> updateStatus(
+            @PathVariable long id,
+            @RequestBody Agreement agreement
+    ) {
+        try {
+            Agreement agreementWithUpdateStatus = agreementService.updateStatus(id, agreement.getStatus());
+            return ResponseEntity.ok(agreementWithUpdateStatus);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

@@ -2,17 +2,15 @@ package org.example.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import org.example.enums.Status;
 import java.math.BigDecimal;
-
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "agreement")
+@Table(name = "agreements")
 public class Agreement {
 
     @Id
@@ -22,7 +20,8 @@ public class Agreement {
 
     private BigDecimal interestRate;
 
-    private int status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     private BigDecimal sum;
 
@@ -38,5 +37,9 @@ public class Agreement {
     @OneToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
+
+    @OneToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
 
 }

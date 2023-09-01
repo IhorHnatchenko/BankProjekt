@@ -13,6 +13,6 @@ public class TransactionDtoConvertor<ENTITY, DTO> implements Converter<Transacti
 
     @Override
     public Transaction toEntity(TransactionDto transactionDto) {
-        return new Transaction(transactionDto.getAmount(), transactionDto.getDescription());
+        return new Transaction(transactionDto.getBalance(), transactionDto.getDescription());
     }
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-
+import org.example.enums.Status;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,15 +13,16 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "manager")
+@Table(name = "managers")
 public class Manager {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
-    private int status;
     @NotBlank
     private String firstName;
     @NotBlank
@@ -43,6 +44,7 @@ public class Manager {
     private List<Client> clients = new ArrayList<>();
 
     @OneToMany(mappedBy = "manager")
+    @JsonIgnore
     private List<Product> products = new ArrayList<>();
 
 }

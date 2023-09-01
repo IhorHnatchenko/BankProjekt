@@ -3,11 +3,12 @@ package org.example.controller;
 import jakarta.persistence.EntityNotFoundException;
 import org.example.dto.ClientDto;
 import org.example.entities.Client;
+import org.example.entities.Manager;
+import org.example.enums.Status;
 import org.example.service.ClientService;
 import org.example.service.dtoConvertor.ClientDtoConvertor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class ClientController {
     @GetMapping("/{id}")
     public ClientDto getById(@PathVariable(name = "id") long id) {
         Client client = clientService.getById(id);
-        if (client.getStatus() == 0) {
+        if (client.getStatus().equals(Status.INACTIVE)) {
             return null;
         }
         return clientDtoConverter.toDto(clientService.getById(id));
@@ -51,9 +52,6 @@ public class ClientController {
             @PathVariable long id,
             @RequestBody Client client
     ) {
-        if (clientService.getById(id).getStatus() == 0) {
-            return null;
-        }
         try {
             Client clientWithUpdateStatus = clientService.updateStatus(id, client.getStatus());
             return ResponseEntity.ok(clientWithUpdateStatus);
@@ -62,12 +60,32 @@ public class ClientController {
         }
     }
 
+
+    @PutMapping("/change/manager/{id}")
+    public ResponseEntity<Client> changeManager(
+            @PathVariable long id,
+            @RequestBody Manager manager) {
+        if (clientService.getById(id).getStatus().equals(Status.INACTIVE)) {
+            // Напиши лог.
+            return null;
+        }
+
+        try {
+            Client clientWithChangeManager = clientService.changeManager(id, manager);
+            return ResponseEntity.ok(clientWithChangeManager);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
     @PutMapping("/update/phone/{id}")
     public ResponseEntity<Client> updatePhone(
             @PathVariable long id,
             @RequestBody Client client
     ) {
-        if (clientService.getById(id).getStatus() == 0) {
+        if (clientService.getById(id).getStatus().equals(Status.INACTIVE)) {
+            // Напиши лог.
             return null;
         }
 
@@ -78,6 +96,64 @@ public class ClientController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/change/email/{id}")
+    public ResponseEntity<Client> updateEmail(
+            @PathVariable long id,
+            @RequestBody Client client
+    ) {
+        if (clientService.getById(id).getStatus().equals(Status.INACTIVE)) {
+            // Напиши лог.
+            return null;
+        }
+
+        try {
+            Client clientWithUpdateEmail = clientService.changeEmail(id, client.getEmail());
+            return ResponseEntity.ok(clientWithUpdateEmail);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/change/address/{id}")
+    public ResponseEntity<Client> updateAddress(
+            @PathVariable long id,
+            @RequestBody Client client
+    ) {
+        if (clientService.getById(id).getStatus().equals(Status.INACTIVE)) {
+            // Напиши лог.
+            return null;
+        }
+
+        try {
+            Client clientWithUpdateAddress = clientService.changeAddress(id, client.getAddress());
+            return ResponseEntity.ok(clientWithUpdateAddress);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+/*    @DeleteMapping("/drop/account/{id}")
+    public ResponseEntity<Client> dropAccount(
+            @PathVariable long id,
+            @RequestBody Account account
+    ) {
+        try {
+            Client clientWithDropAccount = clientService.dropAccount(id, account);
+            return ResponseEntity.ok(clientWithDropAccount);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }*/
+
+/*    {
+        "status": 1,
+            "name": "Ihor",
+            "type": 1,
+            "balance": 100,
+            "currencyCode": "USD"
+    }*/
 
     /*{
     "status": 1,

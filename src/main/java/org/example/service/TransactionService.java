@@ -1,7 +1,6 @@
 package org.example.service;
 
 import org.example.entities.Transaction;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -23,8 +22,8 @@ public interface TransactionService {
      Это скорее всего связанно с не правильным поиском аккаунта по пользователю.*/
     void transferToAccount(
             long clientOneId,
-            long accountOneId,
             long clientTwoId,
+            long accountOneId,
             long accountTwoId,
             BigDecimal balance) throws IllegalAccessException;
 }

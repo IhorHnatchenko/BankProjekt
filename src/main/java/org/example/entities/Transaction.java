@@ -2,7 +2,6 @@ package org.example.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -10,12 +9,12 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "transaction")
+@Table(name = "transactions")
 public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long iban;
 
 
     private int type;
@@ -34,14 +33,12 @@ public class Transaction {
         this.description = description;
     }
 
-    public Transaction(BigDecimal amount, String description, Account debit_account, Account credit_account) {
+    public Transaction(BigDecimal amount, Account debit_account, Account credit_account) {
         this.amount = amount;
-        this.description = description;
         this.debitAccount = debit_account;
         this.creditAccount = credit_account;
     }
 
-    // Проверить связи.
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "debit_account_id", referencedColumnName = "id")
     private Account debitAccount;
