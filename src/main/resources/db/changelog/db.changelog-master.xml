@@ -319,4 +319,19 @@
         </insert>
     </changeSet>
 
+<!--    <changeSet id="202309020" author="Ihor Hnatchenko">
+        <insert tableName="clients">
+            <column name="status" value="ACTIVE"/>
+            <column name="tax_code" value="83665980"/>
+            <column name="first_name" value="Dattore"/>
+            <column name="last_name" value="Hiber"/>
+            <column name="email" value="dattore@gmail.com"/>
+            <column name="address" value="Sneznaya"/>
+            <column name="phone" value="378765430"/>
+            <column name="manager_id" value="1"/>
+            <column name="create_at" value="2023-09-02T21:31:00"/>
+            <column name="update_at" value="null"/>
+        </insert>
+    </changeSet>-->
+
 </databaseChangeLog>

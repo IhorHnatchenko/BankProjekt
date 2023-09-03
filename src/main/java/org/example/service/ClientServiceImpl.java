@@ -1,5 +1,6 @@
 package org.example.service;
 
+import jakarta.transaction.Transactional;
 import org.example.entities.Client;
 import org.example.entities.Manager;
 import org.example.enums.Status;

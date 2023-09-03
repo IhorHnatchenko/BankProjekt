@@ -42,8 +42,8 @@ public class ManagerController {
     }
 
     @PostMapping
-    public ManagerDto save(@RequestBody ManagerDto managerDto) {
-        return managerDtoConvertor.toDto(managerService.save(managerDtoConvertor.toEntity(managerDto)));
+    public Manager save(@RequestBody Manager manager) {
+        return managerService.save(manager);
     }
 
     @PutMapping("/update/status/{id}")
@@ -58,18 +58,4 @@ public class ManagerController {
             return ResponseEntity.notFound().build();
         }
     }
-
-/*    @PutMapping("/change/client/{managerId}/{clientId}")
-    public ResponseEntity<Manager> changeClient(
-            @PathVariable long managerId,
-            @PathVariable long clientId) {
-
-        try {
-            Manager managerWithChangeClient = managerService.changeClient(managerId, clientId);
-            return ResponseEntity.ok(managerWithChangeClient);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }*/
-
 }

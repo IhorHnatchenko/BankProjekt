@@ -43,8 +43,8 @@ public class ClientController {
     }
 
     @PostMapping
-    public ClientDto save(@RequestBody ClientDto clientDto) {
-        return clientDtoConverter.toDto(clientService.save(clientDtoConverter.toEntity(clientDto)));
+    public Client save(@RequestBody Client client) {
+        return clientService.save(client);
     }
 
     @PutMapping("/update/status/{id}")
