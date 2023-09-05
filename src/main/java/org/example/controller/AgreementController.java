@@ -1,6 +1,5 @@
 package org.example.controller;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.example.dto.AgreementDto;
 import org.example.entities.Agreement;
 import org.example.entities.Product;
@@ -9,6 +8,8 @@ import org.example.service.AgreementService;
 import org.example.service.dtoConvertor.AgreementDtoConvertor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,8 +46,8 @@ public class AgreementController {
     }
 
     @PostMapping
-    public AgreementDto save(@RequestBody AgreementDto agreementDto) {
-        return agreementDtoConvertor.toDto(agreementService.save(agreementDtoConvertor.toEntity(agreementDto)));
+    public Agreement save(@RequestBody Agreement agreement) {
+        return agreementService.save(agreement);
     }
 
     @PutMapping("update/status/{id}")

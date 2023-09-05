@@ -6,6 +6,8 @@ import org.example.entities.Transaction;
 import org.example.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -44,7 +46,13 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     @Override
-    public void transfer(long accountOneId, long accountTwoId, BigDecimal balance) throws IllegalAccessException {
+    public void transfer(
+            long accountOneId,
+            long accountTwoId,
+            BigDecimal balance,
+            String description)
+            throws IllegalAccessException {
+
         Account accountOne = accountService.getById(accountOneId);
         Account accountTwo = accountService.getById(accountTwoId);
 
@@ -52,59 +60,15 @@ public class TransactionServiceImpl implements TransactionService {
             throw new IllegalAccessException("Not enough amount on account.");
         }
 
-/*        String description = accountOne.getName() +
-                ": " +
-                accountOne.getBalance() +
-                " -> " +
-                balance +
-                " -> " +
-                accountTwo.getName() +
-                ": " +
-                accountTwo.getBalance();*/
-
-        Transaction transaction = new Transaction(balance, accountOne, accountTwo);
+        Timestamp create_at = new Timestamp(System.currentTimeMillis());
+        Transaction transaction = new Transaction(balance, accountOne, accountTwo, description, create_at);
 
         accountOne.setBalance(accountOne.getBalance().subtract(balance));
         accountService.save(accountOne);
-
 
         accountTwo.setBalance(accountTwo.getBalance().add(balance));
         accountService.save(accountTwo);
 
         transactionRepository.save(transaction);
-    }
-
-    // Это по идее не нужно.
-    @Override
-    public void transferToAccount(long clientOneId, long clientTwoId, long accountOneId,long accountTwoId, BigDecimal balance) throws IllegalAccessException {
-        Client clientOne = clientService.getById(clientTwoId);
-        Client clientTwo = clientService.getById(clientTwoId);
-
-
-/*        if (clientOne == null || clientTwo == null) {
-            throw new IllegalArgumentException("Invalid client information.");
-        }*/
-
-        List<Account> clientOneAccounts = clientOne.getAccounts();
-        List<Account> clientTwoAccounts = clientTwo.getAccounts();
-
-        Account accountOne = clientOneAccounts.stream().filter(account -> account.getId() == accountOneId).findFirst().orElse(null);
-        Account accountTwo = clientTwoAccounts.stream().filter(account -> account.getId() == accountTwoId).findFirst().orElse(null);
-
-
-        // Он ловит здесь ошибку и я не знаю что с этим сделать.
-        if (accountOne == null || accountTwo == null) {
-            throw new IllegalArgumentException("Invalid account information.");
-        }
-
-        if (accountOne.getBalance().subtract(balance).compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalAccessException("Not enough amount on account.");
-        }
-
-        accountOne.setBalance(accountOne.getBalance().subtract(balance));
-        accountService.save(accountOne);
-
-        accountTwo.setBalance(accountTwo.getBalance().add(balance));
-        accountService.save(accountTwo);
     }
 }

@@ -1,10 +1,11 @@
 package org.example.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.example.enums.Status;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
+@AllArgsConstructor
 @Entity
 @Table(name = "managers")
 public class Manager {
@@ -33,6 +35,11 @@ public class Manager {
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp updateAt;
 
+
+    public Manager(Status status, String firstName, String lastName,  Timestamp createAt, Timestamp updateAt){
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
     public Manager(String firstName, String lastName){
         this.firstName = firstName;

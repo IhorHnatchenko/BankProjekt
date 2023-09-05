@@ -9,6 +9,7 @@ import org.example.service.AccountService;
 import org.example.service.dtoConvertor.AccountDtoConvertor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,8 +47,8 @@ public class AccountController {
     }
 
     @PostMapping
-    public AccountDto save(@RequestBody AccountDto accountDto) {
-        return accountDtoConvertor.toDto(accountService.save(accountDtoConvertor.toEntity(accountDto)));
+    public Account save(@RequestBody Account account) {
+        return accountService.save(account);
     }
 
     @PutMapping("/update/status/{id}")
@@ -71,6 +72,19 @@ public class AccountController {
         try {
             Account accountWithAddAmount = accountService.addAmount(id, amount);
             return ResponseEntity.ok(accountWithAddAmount);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/subtract/amount/{id}/{amount}")
+    public ResponseEntity<Account> subtractAmount (
+            @PathVariable long id,
+            @PathVariable BigDecimal amount
+            ){
+        try {
+            Account accountWithSubtractAmount = accountService.subtractAmount(id, amount);
+            return ResponseEntity.ok(accountWithSubtractAmount);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

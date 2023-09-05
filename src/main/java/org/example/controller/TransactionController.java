@@ -42,29 +42,12 @@ public class TransactionController {
     public void transfer(
             @PathVariable("accountOneId") long accountOneId,
             @PathVariable("accountTwoId") long accountTwoId,
-            @PathVariable("amount") BigDecimal balance) {
+            @PathVariable("amount") BigDecimal balance,
+            @RequestBody String description) {
         try {
-            transferService.transfer(accountOneId, accountTwoId, balance);
+            transferService.transfer(accountOneId, accountTwoId, balance, description);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
     }
-
-    @PostMapping("/{clientOneId}/{clientTwoId}/{accountOneId}/{accountTwoId}/{amount}")
-    public void transferToAccounts(
-            @PathVariable(name = "clientOneId") long clientOneId,
-            @PathVariable(name = "clientTwoId") long clientTwoId,
-            @PathVariable(name = "accountOneId") long accountOneId,
-            @PathVariable(name = "accountTwoId") long accountTwoId,
-            @PathVariable(name = "amount") BigDecimal amount) {
-
-        try {
-            transferService.transferToAccount(clientOneId,clientTwoId,accountOneId,accountTwoId,amount);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
 }

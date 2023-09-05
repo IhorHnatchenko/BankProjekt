@@ -60,6 +60,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 */
 
 
+
+//Я закончил на 55:52 на конфигурации!! Давай нахуй!!!!
+
+// Строки нахуй.
+// Придерживаться определённого стиля.
 @SpringBootApplication
 public class BankApp {
     public static void main(String[] args) {

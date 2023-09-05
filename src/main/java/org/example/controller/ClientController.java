@@ -8,6 +8,7 @@ import org.example.enums.Status;
 import org.example.service.ClientService;
 import org.example.service.dtoConvertor.ClientDtoConvertor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,11 +19,17 @@ public class ClientController {
 
     private final ClientDtoConvertor clientDtoConverter;
 
+    private final PasswordEncoder passwordEncoder;
+
     private final ClientService clientService;
 
-    public ClientController(ClientService clientService, ClientDtoConvertor clientDtoConverter) {
+    public ClientController(
+            ClientService clientService,
+            ClientDtoConvertor clientDtoConverter,
+            PasswordEncoder passwordEncoder) {
         this.clientService = clientService;
         this.clientDtoConverter = clientDtoConverter;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
@@ -44,6 +51,7 @@ public class ClientController {
 
     @PostMapping
     public Client save(@RequestBody Client client) {
+        client.setPassword(passwordEncoder.encode(client.getPassword()));
         return clientService.save(client);
     }
 
@@ -132,38 +140,6 @@ public class ClientController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
-/*    @DeleteMapping("/drop/account/{id}")
-    public ResponseEntity<Client> dropAccount(
-            @PathVariable long id,
-            @RequestBody Account account
-    ) {
-        try {
-            Client clientWithDropAccount = clientService.dropAccount(id, account);
-            return ResponseEntity.ok(clientWithDropAccount);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }*/
-
-/*    {
-        "status": 1,
-            "name": "Ihor",
-            "type": 1,
-            "balance": 100,
-            "currencyCode": "USD"
-    }*/
-
-    /*{
-    "status": 1,
-    "taxCode": 987654,
-    "firstName": "Ihor",
-    "lastName": "Hnatchenko",
-    "email": "Ihor@gmail.com",
-    "address": "hello",
-    "phone": 123456
-}*/
 
 
 }

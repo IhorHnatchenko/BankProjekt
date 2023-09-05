@@ -1,10 +1,10 @@
 package org.example.entities;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.example.enums.Currency;
 import org.example.enums.Status;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotBlank

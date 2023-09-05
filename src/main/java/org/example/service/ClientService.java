@@ -23,6 +23,6 @@ public interface ClientService {
 
     Client changeAddress(long clientId, String address);
 
-
+    Client getByEmail(String email);
 
 }

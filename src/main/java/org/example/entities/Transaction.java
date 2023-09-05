@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long iban;
 
 
@@ -37,6 +37,19 @@ public class Transaction {
         this.amount = amount;
         this.debitAccount = debit_account;
         this.creditAccount = credit_account;
+    }
+
+    public Transaction(
+            BigDecimal amount,
+            Account debit_account,
+            Account credit_account,
+            String description,
+            Timestamp createAt) {
+        this.amount = amount;
+        this.debitAccount = debit_account;
+        this.creditAccount = credit_account;
+        this.description = description;
+        this.createAt = createAt;
     }
 
     @ManyToOne(cascade = CascadeType.ALL)

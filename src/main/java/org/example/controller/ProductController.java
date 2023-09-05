@@ -45,8 +45,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public ProductDto save(@RequestBody ProductDto productDto){
-        return productDtoConvertor.toDto(productService.save(productDtoConvertor.toEntity(productDto)));
+    public Product save(@RequestBody Product product){
+        return productService.save(product);
     }
 
     @PutMapping("/update/status/{id}")

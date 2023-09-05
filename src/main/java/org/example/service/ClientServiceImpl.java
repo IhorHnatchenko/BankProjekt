@@ -1,10 +1,10 @@
 package org.example.service;
 
-import jakarta.transaction.Transactional;
 import org.example.entities.Client;
 import org.example.entities.Manager;
 import org.example.enums.Status;
 import org.example.repository.ClientRepository;
+import org.example.repository.ManagerRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -13,8 +13,11 @@ public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
 
-    public ClientServiceImpl(ClientRepository clientRepository) {
+    private final ManagerRepository managerRepository;
+
+    public ClientServiceImpl(ClientRepository clientRepository, ManagerRepository managerRepository) {
         this.clientRepository = clientRepository;
+        this.managerRepository = managerRepository;
     }
 
     @Override
@@ -29,6 +32,10 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client save(Client client) {
+        if (client.getManager().getId() != 0){
+            Manager manager = managerRepository.findById(client.getManager().getId()).get();
+            client.setManager(manager);
+        }
         return clientRepository.save(client);
     }
 
@@ -54,7 +61,6 @@ public class ClientServiceImpl implements ClientService {
         Client client = clientRepository.getReferenceById(clientId);
         client.setManager(manager);
 
-
         return clientRepository.save(client);
     }
 
@@ -73,6 +79,13 @@ public class ClientServiceImpl implements ClientService {
         client.setAddress(address);
         return clientRepository.save(client);
     }
+
+    @Override
+    public Client getByEmail(String email) {
+        return clientRepository.findByEmail(email);
+    }
+
+
 
 
 }

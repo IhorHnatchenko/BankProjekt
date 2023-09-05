@@ -41,6 +41,12 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="202309032" author="Ihor Hnatchenko">
+        <addColumn tableName="clients">
+            <column name="password" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
 
     <changeSet id="202308302" author="Ihor Hnatchenko">
         <comment>Add accounts table</comment>
@@ -122,7 +128,7 @@
     <changeSet id="202308305" author="Ihor Hnatchenko">
         <comment>Add transaction table</comment>
         <createTable tableName="transactions">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="iban" type="BIGINT">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="transaction_pkey"/>
             </column>
             <column name="type" type="INTEGER"/>
@@ -333,5 +339,21 @@
             <column name="update_at" value="null"/>
         </insert>
     </changeSet>-->
+
+    <changeSet id="202309030" author="Ihor Hnatchenko">
+        <insert tableName="clients">
+            <column name="status" value="ACTIVE"/>
+            <column name="tax_code" value="19990909"/>
+            <column name="first_name" value="Yi"/>
+            <column name="last_name" value="Honkaj"/>
+            <column name="email" value="Yi@gmail.com"/>
+            <column name="address" value="YiHome"/>
+            <column name="phone" value="674829876"/>
+            <column name="manager_id" value="2"/>
+            <column name="create_at" value="2023-08-30 21:10:00"/>
+            <column name="update_at" value="null"/>
+        </insert>
+
+    </changeSet>
 
 </databaseChangeLog>

@@ -1,9 +1,10 @@
 package org.example.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import lombok.*;
 import org.example.enums.Status;
+
+import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,11 @@ public class Client {
 
     private String lastName;
 
+    // Use as login.
     @Column(unique = true)
     private String email;
+
+    private String password;
 
     private String address;
 

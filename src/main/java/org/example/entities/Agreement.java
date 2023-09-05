@@ -1,8 +1,9 @@
 package org.example.entities;
 
-import jakarta.persistence.*;
+
 import lombok.*;
 import org.example.enums.Status;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -14,7 +15,7 @@ import java.sql.Timestamp;
 public class Agreement {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
 

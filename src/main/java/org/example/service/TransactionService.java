@@ -2,6 +2,7 @@ package org.example.service;
 
 import org.example.entities.Transaction;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface TransactionService {
@@ -12,18 +13,11 @@ public interface TransactionService {
 
     Transaction save(Transaction transaction);
 
-    void transfer(long accountOneId, long accountTwoId, BigDecimal balance) throws IllegalAccessException;
-
-
-    // Этот метод нужно доработать с учителем.
-
-    /* Проблема заключается в том что при попытке перевода с одного аккаунта одного пользователя
-     на аккаунт другого пользователя выскакивает ошибка IllegalArgumentException.
-     Это скорее всего связанно с не правильным поиском аккаунта по пользователю.*/
-    void transferToAccount(
-            long clientOneId,
-            long clientTwoId,
+    void transfer(
             long accountOneId,
             long accountTwoId,
-            BigDecimal balance) throws IllegalAccessException;
+            BigDecimal balance,
+            String description
+    ) throws IllegalAccessException;
+
 }
