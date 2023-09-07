@@ -2,61 +2,93 @@ package org.example.service;
 
 import org.example.entities.Manager;
 import org.example.repository.ManagerRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.util.Arrays;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.example.enums.Status.ACTIVE;
+import static org.example.enums.Status.INACTIVE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 class ManagerServiceImplTest {
-
-    @InjectMocks
-    private ManagerServiceImpl managerServiceImpl;
 
     @Mock
     private ManagerRepository managerRepository;
 
+    @InjectMocks
+    private ManagerServiceImpl managerService;
 
-    private final List<Manager> managerList = Arrays.asList(
-            new Manager("John", "Doe"),
-            new Manager("Alex", "Honkaj")
-    );
 
-    @BeforeEach
-    public void init() {
-        MockitoAnnotations.openMocks(this);
+    @Test
+    void GetAll_ReturnAll() {
+        List<Manager> managers = new ArrayList<>();
+        Timestamp create_at = Timestamp.valueOf("2023-08-30 20:52:00");
+
+        managers.add(new Manager(ACTIVE, "John", "Doe", create_at, null));
+        managers.add(new Manager(ACTIVE, "Alex", "Honkaj", create_at, null));
+        managers.add(new Manager(ACTIVE, "Bob", "Marly", create_at, null));
+
+        when(managerRepository.findAll()).thenReturn(managers);
+
+        List<Manager> savedAll = managerService.getAll();
+
+        assertEquals(managers, savedAll);
     }
 
     @Test
-    void getAll() {
+    void getById_ReturnById() {
 
-        when(managerRepository.findAll()).thenReturn(managerList);
+        Manager manager = Manager.builder()
+                .id(1)
+                .status(ACTIVE)
+                .firstName("Ihor")
+                .lastName("Hnatchenko").build();
 
-        List<Manager> result = managerServiceImpl.getAll();
+        when(managerRepository.getReferenceById(manager.getId())).thenReturn(manager);
 
-        //verify(managerRepository, times(1)).findAll();
+        Manager saveById = managerService.getById(1);
 
-        assertEquals(managerList, result);
+        assertEquals(manager, saveById);
     }
 
     @Test
-    void getById() {
+    void AddAndSave_ReturnSave() {
 
+        Manager manager = Manager.builder()
+                .status(ACTIVE)
+                .firstName("Ihor")
+                .lastName("Hnatchenko").build();
+
+        when(managerRepository.save(Mockito.any(Manager.class))).thenReturn(manager);
+
+        Manager saved = managerService.save(manager);
+
+        assertEquals(manager, saved);
     }
 
-    @Test
-    void save() {
-    }
 
     @Test
-    void updateStatus() {
+    void GetById_Save_updateStatus_ReturnWithUpdateStatus() {
+
+        Manager manager = Manager.builder()
+                .id(1)
+                .status(ACTIVE)
+                .firstName("Ihor")
+                .lastName("Hnatchenko").build();
+
+        when(managerRepository.getReferenceById(manager.getId())).thenReturn(manager);
+
+        when(managerRepository.save(Mockito.any(Manager.class))).thenReturn(manager);
+
+        Manager withUpdateStatus = managerService.updateStatus(manager.getId(), INACTIVE);
+
+        assertEquals(INACTIVE, withUpdateStatus.getStatus());
     }
 }

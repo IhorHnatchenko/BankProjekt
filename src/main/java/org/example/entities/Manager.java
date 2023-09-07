@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "managers")
 public class Manager {
