@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class TransactionDto {
 
+    private long iban;
+
     private BigDecimal balance;
 
     private String description;

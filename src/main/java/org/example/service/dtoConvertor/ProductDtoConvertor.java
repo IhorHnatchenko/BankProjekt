@@ -11,16 +11,20 @@ public class ProductDtoConvertor<ENTITY, DTO> implements Converter<Product, Prod
     @Override
     public ProductDto toDto(Product product) {
         return new ProductDto(
+                product.getId(),
                 product.getName(),
                 product.getCurrencyCode(),
-                product.getLimitDB());
+                product.getLimitDB(),
+                product.getStatus());
     }
 
     @Override
     public Product toEntity(ProductDto productDto) {
         return new Product(
+                productDto.getId(),
                 productDto.getName(),
                 productDto.getCurrencyCode(),
-                productDto.getLimitDB());
+                productDto.getLimitDB(),
+                productDto.getStatus());
     }
 }

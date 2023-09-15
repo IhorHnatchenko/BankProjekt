@@ -5,6 +5,7 @@ import org.example.dto.AccountDto;
 import org.example.entities.Account;
 import org.example.entities.Client;
 import org.example.enums.Status;
+import org.example.exceptions.InvalidStatusException;
 import org.example.service.AccountService;
 import org.example.service.dtoConvertor.AccountDtoConvertor;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +19,11 @@ import java.util.stream.Collectors;
 @RequestMapping("accounts")
 public class AccountController {
 
-    private final AccountService accountService;
+    private final AccountService<Account> accountService;
 
-    private final AccountDtoConvertor accountDtoConvertor;
+    private final AccountDtoConvertor<Account, AccountDto> accountDtoConvertor;
 
-    public AccountController(AccountService accountService, AccountDtoConvertor accountDtoConvertor) {
+    public AccountController(AccountService<Account> accountService, AccountDtoConvertor<Account, AccountDto> accountDtoConvertor) {
         this.accountService = accountService;
         this.accountDtoConvertor = accountDtoConvertor;
     }
@@ -36,11 +37,13 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
-    public AccountDto getById(@PathVariable(name = "id") long id) {
+    public AccountDto getById(@PathVariable(name = "id") long id) throws InvalidStatusException{
         Account account = accountService.getById(id);
         Client registeredClient = account.getRegisteredClient();
-        if (registeredClient.getStatus().equals(Status.INACTIVE) || account.getStatus().equals(Status.INACTIVE)){
-            return null;
+        if (Status.INACTIVE == registeredClient.getStatus()){
+            throw new InvalidStatusException(String.format("Client with id %d is inactive: ", registeredClient.getId()));
+        } else if (Status.INACTIVE == account.getStatus()) {
+            throw new InvalidStatusException(String.format("Account with id %d is inactive: ", account.getId()));
         }
 
         return accountDtoConvertor.toDto(accountService.getById(id));
@@ -52,42 +55,29 @@ public class AccountController {
     }
 
     @PutMapping("/update/status/{id}")
-    public ResponseEntity<Account> updateStatus(
+    public AccountDto updateStatus(
             @PathVariable long id,
-            @RequestBody Account account) {
+            @RequestBody AccountDto accountDto) {
 
-        try {
-            Account accountWithUpdateStatus = accountService.updateStatus(id, account.getStatus());
-            return ResponseEntity.ok(accountWithUpdateStatus);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+            return accountDtoConvertor.toDto(accountService.updateStatus(id, accountDto.getStatus()));
     }
 
     @PutMapping("/add/amount/{id}/{amount}")
-    public ResponseEntity<Account> addAmount (
+    public AccountDto addAmount (
             @PathVariable long id,
-            @PathVariable BigDecimal amount
-    ){
-        try {
-            Account accountWithAddAmount = accountService.addAmount(id, amount);
-            return ResponseEntity.ok(accountWithAddAmount);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+            @PathVariable BigDecimal amount){
+
+            return accountDtoConvertor.toDto(accountService.addAmount(id, amount));
     }
 
     @PutMapping("/subtract/amount/{id}/{amount}")
-    public ResponseEntity<Account> subtractAmount (
+    public AccountDto subtractAmount (
             @PathVariable long id,
             @PathVariable BigDecimal amount
             ){
-        try {
-            Account accountWithSubtractAmount = accountService.subtractAmount(id, amount);
-            return ResponseEntity.ok(accountWithSubtractAmount);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+
+            return accountDtoConvertor.toDto(accountService.subtractAmount(id, amount));
+
     }
 
     @DeleteMapping("/drop")

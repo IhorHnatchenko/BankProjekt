@@ -1,15 +1,17 @@
 package org.example.controller;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.example.dto.ClientDto;
+import org.example.dto.ManagerDto;
 import org.example.entities.Client;
 import org.example.entities.Manager;
 import org.example.enums.Status;
+import org.example.exceptions.InvalidStatusException;
 import org.example.service.ClientService;
 import org.example.service.dtoConvertor.ClientDtoConvertor;
-import org.springframework.http.ResponseEntity;
+import org.example.service.dtoConvertor.ManagerDtoConvertor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,19 +19,23 @@ import java.util.stream.Collectors;
 @RequestMapping("clients")
 public class ClientController {
 
-    private final ClientDtoConvertor clientDtoConverter;
+    private final ClientDtoConvertor<Client, ClientDto> clientDtoConverter;
 
     private final PasswordEncoder passwordEncoder;
 
-    private final ClientService clientService;
+    private final ClientService<Client> clientService;
+
+    private final ManagerDtoConvertor<Manager, ManagerDto> managerDtoConvertor;
 
     public ClientController(
-            ClientService clientService,
-            ClientDtoConvertor clientDtoConverter,
-            PasswordEncoder passwordEncoder) {
+            ClientService<Client> clientService,
+            ClientDtoConvertor<Client, ClientDto> clientDtoConverter,
+            PasswordEncoder passwordEncoder,
+            ManagerDtoConvertor<Manager, ManagerDto> managerDtoConvertor) {
         this.clientService = clientService;
         this.clientDtoConverter = clientDtoConverter;
         this.passwordEncoder = passwordEncoder;
+        this.managerDtoConvertor = managerDtoConvertor;
     }
 
     @GetMapping
@@ -41,12 +47,25 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ClientDto getById(@PathVariable(name = "id") long id) {
+    public ClientDto getById(@PathVariable(name = "id") long id) throws InvalidStatusException {
         Client client = clientService.getById(id);
-        if (client.getStatus().equals(Status.INACTIVE)) {
-            return null;
+        if (Status.INACTIVE == client.getStatus()) {
+            throw new InvalidStatusException(String.format("Client with id %d is inactive: ", client.getId()));
         }
         return clientDtoConverter.toDto(clientService.getById(id));
+    }
+
+    @GetMapping("/email/{email}")
+    public ClientDto getByEmail(@PathVariable(name = "email") String email) throws InvalidStatusException {
+        Client client = clientService.getByEmail(email);
+
+        if (Status.INACTIVE == client.getStatus()){
+            throw new InvalidStatusException(String.format("Client with id %d is inactive: ", client.getId()));
+        }
+
+        return clientDtoConverter.toDto(client);
+
+
     }
 
     @PostMapping
@@ -56,90 +75,84 @@ public class ClientController {
     }
 
     @PutMapping("/update/status/{id}")
-    public ResponseEntity<Client> updateStatus(
+    public ClientDto updateStatus(
             @PathVariable long id,
-            @RequestBody Client client
+            @RequestBody ClientDto clientDto
     ) {
-        try {
-            Client clientWithUpdateStatus = clientService.updateStatus(id, client.getStatus());
-            return ResponseEntity.ok(clientWithUpdateStatus);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+
+        return clientDtoConverter
+                .toDto(clientService
+                        .updateStatus(id, clientDto
+                                .getStatus()));
     }
 
 
     @PutMapping("/change/manager/{id}")
-    public ResponseEntity<Client> changeManager(
+    public ClientDto changeManager(
             @PathVariable long id,
-            @RequestBody Manager manager) {
-        if (clientService.getById(id).getStatus().equals(Status.INACTIVE)) {
-            // Напиши лог.
-            return null;
+            @RequestBody ManagerDto managerDto
+    ) throws InvalidStatusException {
+
+        Client client = clientService.getById(id);
+
+        if (Status.INACTIVE == client.getStatus()) {
+            throw new InvalidStatusException(String.format("Client with id %d is inactive: ",
+                    client.getId()));
+        } else if (Status.INACTIVE == managerDto.getStatus()) {
+            throw new InvalidStatusException(String.format("Manager with id %d is inactive: ",
+                    managerDto.getId()));
         }
 
-        try {
-            Client clientWithChangeManager = clientService.changeManager(id, manager);
-            return ResponseEntity.ok(clientWithChangeManager);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-
+        return clientDtoConverter
+                .toDto(clientService
+                        .changeManager(id, managerDtoConvertor
+                                .toEntity(managerDto)));
     }
 
     @PutMapping("/update/phone/{id}")
-    public ResponseEntity<Client> updatePhone(
+    public Client updatePhone(
             @PathVariable long id,
             @RequestBody Client client
-    ) {
-        if (clientService.getById(id).getStatus().equals(Status.INACTIVE)) {
-            // Напиши лог.
-            return null;
+    ) throws InvalidStatusException {
+
+        if (Status.INACTIVE == client.getStatus()) {
+            throw new InvalidStatusException(String.format("Client with id %d is inactive: ",
+                    client.getId()));
         }
 
-        try {
-            Client updatedClient = clientService.updatePhoneNumber(id, client.getPhone());
-            return ResponseEntity.ok(updatedClient);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return clientService.updatePhoneNumber(id, client.getPhone());
     }
 
     @PutMapping("/change/email/{id}")
-    public ResponseEntity<Client> updateEmail(
+    public ClientDto updateEmail(
             @PathVariable long id,
-            @RequestBody Client client
-    ) {
-        if (clientService.getById(id).getStatus().equals(Status.INACTIVE)) {
-            // Напиши лог.
-            return null;
+            @RequestBody ClientDto clientDto
+    ) throws InvalidStatusException {
+
+        if (Status.INACTIVE == clientDto.getStatus()) {
+            throw new InvalidStatusException(String.format("Client with id %d is inactive: ",
+                    clientDto.getId()));
         }
 
-        try {
-            Client clientWithUpdateEmail = clientService.changeEmail(id, client.getEmail());
-            return ResponseEntity.ok(clientWithUpdateEmail);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return clientDtoConverter
+                .toDto(clientService
+                        .changeEmail(id, clientDtoConverter
+                                .toEntity(clientDto)
+                                .getEmail()));
     }
 
     @PutMapping("/change/address/{id}")
-    public ResponseEntity<Client> updateAddress(
+    public Client updateAddress(
             @PathVariable long id,
             @RequestBody Client client
-    ) {
-        if (clientService.getById(id).getStatus().equals(Status.INACTIVE)) {
-            // Напиши лог.
-            return null;
+    ) throws InvalidStatusException{
+
+        if (Status.INACTIVE == client.getStatus()) {
+            throw new InvalidStatusException(String.format("Client with id %d is inactive: ",
+                    client.getId()));
         }
 
-        try {
-            Client clientWithUpdateAddress = clientService.changeAddress(id, client.getAddress());
-            return ResponseEntity.ok(clientWithUpdateAddress);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return clientService.changeAddress(id, client.getAddress());
+
     }
-
-
 }

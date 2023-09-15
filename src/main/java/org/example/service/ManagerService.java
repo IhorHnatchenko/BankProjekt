@@ -5,15 +5,15 @@ import org.example.entities.Manager;
 import org.example.enums.Status;
 import java.util.List;
 
-public interface ManagerService {
+public interface ManagerService<M> {
 
-    List<Manager> getAll();
+    List<M> getAll();
 
-    Manager getById(long managerId);
+    M getById(long managerId);
 
-    Manager save(Manager manager);
+    M save(M manager);
 
-    Manager updateStatus(long managerId, Status status);
+    M updateStatus(long managerId, Status status);
 
     //Manager changeClient(long managerId, long clientId);
 }

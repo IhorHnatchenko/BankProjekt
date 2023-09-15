@@ -4,6 +4,7 @@ import org.example.dto.AgreementDto;
 import org.example.entities.Agreement;
 import org.example.entities.Product;
 import org.example.enums.Status;
+import org.example.exceptions.InvalidStatusException;
 import org.example.service.AgreementService;
 import org.example.service.dtoConvertor.AgreementDtoConvertor;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +18,11 @@ import java.util.stream.Collectors;
 @RequestMapping("agreements")
 public class AgreementController {
 
-    private final AgreementService agreementService;
+    private final AgreementService<Agreement> agreementService;
 
-    private final AgreementDtoConvertor agreementDtoConvertor;
+    private final AgreementDtoConvertor<Agreement, AgreementDto> agreementDtoConvertor;
 
-    public AgreementController(AgreementService agreementService, AgreementDtoConvertor agreementDtoConvertor) {
+    public AgreementController(AgreementService<Agreement> agreementService, AgreementDtoConvertor<Agreement, AgreementDto> agreementDtoConvertor) {
         this.agreementService = agreementService;
         this.agreementDtoConvertor = agreementDtoConvertor;
     }
@@ -35,11 +36,13 @@ public class AgreementController {
     }
 
     @GetMapping("/{id}")
-    public AgreementDto getById(@PathVariable(name = "id") long id) {
+    public AgreementDto getById(@PathVariable(name = "id") long id) throws InvalidStatusException {
         Agreement agreement = agreementService.getById(id);
         Product product = agreement.getProduct();
-        if (product.getStatus().equals(Status.INACTIVE) || agreement.getStatus().equals(Status.INACTIVE)) {
-            return null;
+        if (Status.INACTIVE == product.getStatus()) {
+            throw new InvalidStatusException(String.format("Product with id %d is inactive: ", product.getId()));
+        } else if (Status.INACTIVE == agreement.getStatus()) {
+            throw new InvalidStatusException(String.format("Agreement with id %d is inactive: ", agreement.getId()));
         }
 
         return agreementDtoConvertor.toDto(agreementService.getById(id));
@@ -51,16 +54,11 @@ public class AgreementController {
     }
 
     @PutMapping("update/status/{id}")
-    public ResponseEntity<Agreement> updateStatus(
+    public AgreementDto updateStatus(
             @PathVariable long id,
-            @RequestBody Agreement agreement
+            @RequestBody AgreementDto agreementDto
     ) {
-        try {
-            Agreement agreementWithUpdateStatus = agreementService.updateStatus(id, agreement.getStatus());
-            return ResponseEntity.ok(agreementWithUpdateStatus);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+            return agreementDtoConvertor.toDto(agreementService.updateStatus(id, agreementDto.getStatus()));
     }
 
 }

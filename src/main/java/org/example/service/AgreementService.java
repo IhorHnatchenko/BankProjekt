@@ -4,13 +4,13 @@ import org.example.entities.Agreement;
 import org.example.enums.Status;
 import java.util.List;
 
-public interface AgreementService {
+public interface AgreementService<AG> {
 
-    List<Agreement> getAll();
+    List<AG> getAll();
 
-    Agreement getById(long agreementId);
+    AG getById(long agreementId);
 
-    Agreement save(Agreement agreement);
+    AG save(AG agreement);
 
-    Agreement updateStatus(long agreementId, Status status);
+    AG updateStatus(long agreementId, Status status);
 }

@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @Service
-public class ManagerServiceImpl implements ManagerService {
+public class ManagerServiceImpl implements ManagerService<Manager> {
 
     private final ManagerRepository managerRepository;
 
@@ -23,20 +23,18 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public Manager getById(long managerId) {
-        assert managerRepository != null;
-        return managerRepository.getReferenceById(managerId);
+        return managerRepository.findById(managerId).orElseThrow(
+                () -> new IllegalArgumentException("Incorrect manager id " + managerId));
     }
 
     @Override
     public Manager save(Manager manager) {
-        assert managerRepository != null;
         return managerRepository.save(manager);
     }
 
     @Override
     public Manager updateStatus(long managerId, Status status) {
-        assert managerRepository != null;
-        Manager manager = managerRepository.getReferenceById(managerId);
+        Manager manager = getById(managerId);
 
         manager.setStatus(status);
         return managerRepository.save(manager);

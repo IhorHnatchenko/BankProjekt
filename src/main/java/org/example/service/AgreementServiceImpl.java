@@ -11,21 +11,21 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AgreementServiceImpl implements AgreementService {
+public class AgreementServiceImpl implements AgreementService<Agreement> {
 
     private final AgreementRepository agreementRepository;
 
-    private final AccountRepository accountRepository;
+    private final AccountService<Account> accountService;
 
-    private final ProductRepository productRepository;
+    private final ProductService<Product> productService;
 
     public AgreementServiceImpl(
             AgreementRepository agreementRepository,
-            AccountRepository accountRepository,
-            ProductRepository productRepository) {
+            AccountService<Account> accountService,
+            ProductService<Product> productService) {
         this.agreementRepository = agreementRepository;
-        this.accountRepository = accountRepository;
-        this.productRepository = productRepository;
+        this.accountService = accountService;
+        this.productService = productService;
     }
 
 
@@ -36,27 +36,27 @@ public class AgreementServiceImpl implements AgreementService {
 
     @Override
     public Agreement getById(long agreementId) {
-        return agreementRepository.getReferenceById(agreementId);
+        return agreementRepository.findById(agreementId).orElseThrow(
+                () -> new IllegalArgumentException("Incorrect agreement id " + agreementId)
+        );
     }
 
     @Override
     public Agreement save(Agreement agreement) {
-        if(agreement.getAccount() != null && agreement.getProduct() != null &&
-        agreement.getAccount().getId() != 0 && agreement.getProduct().getId() != 0){
-            Account account = accountRepository.findById(agreement.getAccount().getId()).get();
-            Product product = productRepository.findById(agreement.getProduct().getId()).get();
+
+            Account account = accountService.getById(agreement.getAccount().getId());
+            Product product = productService.getById(agreement.getProduct().getId());
             agreement.setAccount(account);
             agreement.setProduct(product);
+
             return agreementRepository.save(agreement);
-        }
-        return null;
     }
 
     @Override
     public Agreement updateStatus(long agreementId, Status status) {
-        Agreement agreement = agreementRepository.getReferenceById(agreementId);
-
+        Agreement agreement = getById(agreementId);
         agreement.setStatus(status);
+
         return agreementRepository.save(agreement);
     }
 }

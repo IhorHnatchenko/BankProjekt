@@ -1,17 +1,15 @@
 package org.example.service;
 
-import org.example.entities.Transaction;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.List;
 
-public interface TransactionService {
+public interface TransactionService<T> {
 
-    List<Transaction> getAll();
+    List<T> getAll();
 
-    Transaction getById(long transactionId);
+    T getById(long transactionId);
 
-    Transaction save(Transaction transaction);
+    T save(T transaction);
 
     void transfer(
             long accountOneId,

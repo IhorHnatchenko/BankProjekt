@@ -9,11 +9,19 @@ public class AccountDtoConvertor<ENTITY, DTO> implements Converter<Account, Acco
 
     @Override
     public AccountDto toDto(Account account) {
-        return new AccountDto(account.getName(), account.getBalance());
+        return new AccountDto(
+                account.getId(),
+                account.getName(),
+                account.getBalance(),
+                account.getStatus());
     }
 
     @Override
     public Account toEntity(AccountDto accountDto) {
-        return new Account(accountDto.getName(), accountDto.getBalance());
+        return new Account(
+                accountDto.getId(),
+                accountDto.getName(),
+                accountDto.getBalance(),
+                accountDto.getStatus());
     }
 }

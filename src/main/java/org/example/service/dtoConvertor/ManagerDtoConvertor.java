@@ -9,11 +9,19 @@ public class ManagerDtoConvertor<ENTITY, DTO> implements Converter<Manager, Mana
 
     @Override
     public ManagerDto toDto(Manager manager) {
-        return new ManagerDto(manager.getFirstName(), manager.getLastName());
+        return new ManagerDto(
+                manager.getId(),
+                manager.getFirstName(),
+                manager.getLastName(),
+                manager.getStatus());
     }
 
     @Override
     public Manager toEntity(ManagerDto managerDto) {
-        return new Manager(managerDto.getFirstName(), managerDto.getLastName());
+        return new Manager(
+                managerDto.getId(),
+                managerDto.getFirstName(),
+                managerDto.getLastName(),
+                managerDto.getStatus());
     }
 }

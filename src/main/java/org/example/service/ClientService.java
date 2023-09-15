@@ -1,28 +1,27 @@
 package org.example.service;
 
-import org.example.entities.Client;
 import org.example.entities.Manager;
 import org.example.enums.Status;
 import java.util.List;
 
-public interface ClientService {
+public interface ClientService<C> {
 
-    List<Client> getAll();
+    List<C> getAll();
 
-    Client getById(long clientId);
+    C getById(long clientId);
 
-    Client save(Client client);
+    C save(C client);
 
-    Client updatePhoneNumber(long clientId, int phoneNumber);
+    C updatePhoneNumber(long clientId, int phoneNumber);
 
-    Client updateStatus(long clientId, Status status);
+    C updateStatus(long clientId, Status status);
 
-    Client changeManager(long clientId, Manager manager);
+    C changeManager(long clientId, Manager manager);
 
-    Client changeEmail(long clientId, String email);
+    C changeEmail(long clientId, String email);
 
-    Client changeAddress(long clientId, String address);
+    C changeAddress(long clientId, String address);
 
-    Client getByEmail(String email);
+    C getByEmail(String email);
 
 }

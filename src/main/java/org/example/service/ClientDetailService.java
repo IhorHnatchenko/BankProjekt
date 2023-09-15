@@ -7,15 +7,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class ClientDetailService implements UserDetailsService {
 
-    private final ClientService clientService;
+    private final ClientService<Client> clientService;
 
-    public ClientDetailService(ClientService clientService) {
+    public ClientDetailService(ClientService<Client> clientService) {
         this.clientService = clientService;
     }
 
@@ -27,6 +26,6 @@ public class ClientDetailService implements UserDetailsService {
         }
 
         return new User(client.getEmail(), client.getPassword(),
-                Arrays.asList(new SimpleGrantedAuthority("client")));
+                List.of(new SimpleGrantedAuthority("client")));
     }
 }

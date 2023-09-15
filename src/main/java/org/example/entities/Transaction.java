@@ -8,6 +8,8 @@ import java.sql.Timestamp;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "transactions")
 public class Transaction {
@@ -28,7 +30,8 @@ public class Transaction {
     private Timestamp createAt;
 
 
-    public Transaction(BigDecimal amount, String description) {
+    public Transaction(long iban, BigDecimal amount, String description) {
+        this.iban = iban;
         this.amount = amount;
         this.description = description;
     }

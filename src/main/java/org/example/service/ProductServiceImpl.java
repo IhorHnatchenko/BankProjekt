@@ -3,22 +3,22 @@ package org.example.service;
 import org.example.entities.Manager;
 import org.example.entities.Product;
 import org.example.enums.Status;
-import org.example.repository.ManagerRepository;
 import org.example.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl implements ProductService<Product> {
 
     private final ProductRepository productRepository;
 
-    private final ManagerRepository managerRepository;
+    private final ManagerService<Manager> managerService;
 
-    public ProductServiceImpl(ProductRepository productRepository, ManagerRepository managerRepository) {
+    public ProductServiceImpl(
+            ProductRepository productRepository,
+            ManagerService<Manager> managerService) {
         this.productRepository = productRepository;
-        this.managerRepository = managerRepository;
+        this.managerService = managerService;
     }
 
     @Override
@@ -28,24 +28,24 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getById(long productId) {
-        return productRepository.getReferenceById(productId);
+        return productRepository.findById(productId).orElseThrow(
+                () -> new IllegalArgumentException("Incorrect product id " + productId)
+        );
     }
 
     @Override
     public Product save(Product product) {
-        if (product.getManager() != null && product.getManager().getId() != 0){
-            Manager manager = managerRepository.findById(product.getManager().getId()).get();
-            product.setManager(manager);
-            return productRepository.save(product);
-        }
-        return null;
+        Manager manager = managerService.getById(product.getManager().getId());
+        product.setManager(manager);
+
+        return productRepository.save(product);
     }
 
     @Override
     public Product updateStatus(long productId, Status status) {
-        Product product = productRepository.getReferenceById(productId);
-
+        Product product = getById(productId);
         product.setStatus(status);
+
         return productRepository.save(product);
     }
 }

@@ -4,7 +4,6 @@ import org.example.entities.Account;
 import org.example.entities.Client;
 import org.example.enums.Status;
 import org.example.repository.AccountRepository;
-import org.example.repository.ClientRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,52 +11,50 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Service
-public class AccountServiceImpl implements AccountService {
+public class AccountServiceImpl implements AccountService<Account> {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
     private final AccountRepository accountRepository;
 
-    private final ClientRepository clientRepository;
+    private final ClientService<Client> clientService;
 
-    public AccountServiceImpl(AccountRepository accountRepository, ClientRepository clientRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository, ClientService<Client> clientService) {
         this.accountRepository = accountRepository;
-        this.clientRepository = clientRepository;
+        this.clientService = clientService;
     }
 
     @Override
     public List<Account> getAll() {
-        //logger.info("Call method get all.");
-
         return accountRepository.findAll();
     }
 
     @Override
     public Account getById(long accountId) {
-        return accountRepository.getReferenceById(accountId);
+        return accountRepository.findById(accountId).orElseThrow(
+                () -> new IllegalArgumentException("Incorrect account id " + accountId)
+        );
     }
 
     @Override
     public Account save(Account account) {
-        if (account.getRegisteredClient() != null && account.getRegisteredClient().getId() != 0){
-            Client client = clientRepository.findById(account.getRegisteredClient().getId()).get();
-            account.setRegisteredClient(client);
-            return accountRepository.save(account);
-        }
-        return null;
+        Client client = clientService.getById(account.getRegisteredClient().getId());
+        account.setRegisteredClient(client);
+
+        return accountRepository.save(account);
     }
 
     @Override
     public Account updateStatus(long accountId, Status status) {
-        Account account = accountRepository.getReferenceById(accountId);
-
+        Account account = getById(accountId);
         account.setStatus(status);
+
         return accountRepository.save(account);
     }
 
     @Override
     public Account addAmount(long accountId, BigDecimal amount) {
-        Account account = accountRepository.getReferenceById(accountId);
+        Account account = getById(accountId);
 
         BigDecimal balanceBeforeAdd = account.getBalance();
         account.setBalance(balanceBeforeAdd.add(amount));
@@ -67,7 +64,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account subtractAmount(long accountId, BigDecimal amount) {
-        Account account = accountRepository.getReferenceById(accountId);
+        Account account = getById(accountId);
 
         BigDecimal balanceBeforeSubtraction = account.getBalance();
         account.setBalance(balanceBeforeSubtraction.subtract(amount));

@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import org.example.dto.TransactionDto;
+import org.example.entities.Transaction;
 import org.example.service.TransactionService;
 import org.example.service.dtoConvertor.TransactionDtoConvertor;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +12,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("transfers")
 public class TransactionController {
-    private final TransactionService transferService;
+    private final TransactionService<Transaction> transferService;
 
-    private final TransactionDtoConvertor transactionDtoConvertor;
+    private final TransactionDtoConvertor<Transaction, TransactionDto> transactionDtoConvertor;
 
-    public TransactionController(TransactionService transferService, TransactionDtoConvertor transactionDtoConvertor) {
+    public TransactionController(TransactionService<Transaction> transferService, TransactionDtoConvertor<Transaction, TransactionDto> transactionDtoConvertor) {
         this.transferService = transferService;
         this.transactionDtoConvertor = transactionDtoConvertor;
     }
@@ -34,8 +35,8 @@ public class TransactionController {
     }
 
     @PostMapping
-    public TransactionDto save(@RequestBody TransactionDto transactionDto) {
-        return transactionDtoConvertor.toDto(transferService.save(transactionDtoConvertor.toEntity(transactionDto)));
+    public Transaction save(@RequestBody Transaction transaction) {
+        return transferService.save(transaction);
     }
 
     @PostMapping("/{accountOneId}/{accountTwoId}/{amount}")
@@ -43,11 +44,8 @@ public class TransactionController {
             @PathVariable("accountOneId") long accountOneId,
             @PathVariable("accountTwoId") long accountTwoId,
             @PathVariable("amount") BigDecimal balance,
-            @RequestBody String description) {
-        try {
-            transferService.transfer(accountOneId, accountTwoId, balance, description);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+            @RequestBody String description) throws IllegalAccessException {
+
+        transferService.transfer(accountOneId, accountTwoId, balance, description);
     }
 }

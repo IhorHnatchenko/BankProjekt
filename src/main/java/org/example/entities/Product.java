@@ -11,6 +11,8 @@ import java.sql.Timestamp;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "products")
 public class Product {
@@ -42,17 +44,12 @@ public class Product {
     @JoinColumn(name = "product_manager_id", referencedColumnName = "id")
     private Manager manager;
 
-    public Product(String name, Currency currencyCode, int limitDB) {
+    public Product(long id, String name, Currency currencyCode, int limitDB, Status status) {
+        this.id = id;
         this.name = name;
         this.currencyCode = currencyCode;
         this.limitDB = limitDB;
+        this.status = status;
     }
 
-/*    {
-        "name": "credit1",
-            "status": 1,
-            "currencyCode": "USD",
-            "interestRate": 67,
-            "limitDB": 12
-    }*/
 }

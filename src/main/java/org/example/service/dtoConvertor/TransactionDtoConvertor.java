@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 public class TransactionDtoConvertor<ENTITY, DTO> implements Converter<Transaction, TransactionDto> {
     @Override
     public TransactionDto toDto(Transaction transaction) {
-        return new TransactionDto(transaction.getAmount(), transaction.getDescription());
+        return new TransactionDto(transaction.getIban(), transaction.getAmount(), transaction.getDescription());
     }
 
     @Override
     public Transaction toEntity(TransactionDto transactionDto) {
-        return new Transaction(transactionDto.getBalance(), transactionDto.getDescription());
+        return new Transaction(transactionDto.getIban(), transactionDto.getBalance(), transactionDto.getDescription());
     }
 }

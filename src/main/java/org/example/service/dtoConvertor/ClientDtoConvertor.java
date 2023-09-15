@@ -8,11 +8,21 @@ import org.springframework.stereotype.Component;
 public class ClientDtoConvertor<ENTITY, DTO> implements Converter<Client, ClientDto> {
     @Override
     public ClientDto toDto(Client client) {
-        return new ClientDto(client.getFirstName(), client.getLastName());
+        return new ClientDto(
+                client.getId(),
+                client.getFirstName(),
+                client.getLastName(),
+                client.getEmail(),
+                client.getStatus());
     }
 
     @Override
     public Client toEntity(ClientDto clientDto) {
-        return new Client(clientDto.getFirstName(), clientDto.getLastName());
+        return new Client(
+                clientDto.getId(),
+                clientDto.getFirstName(),
+                clientDto.getLastName(),
+                clientDto.getEmail(),
+                clientDto.getStatus());
     }
 }

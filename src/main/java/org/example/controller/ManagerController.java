@@ -1,12 +1,11 @@
 package org.example.controller;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.example.dto.ManagerDto;
 import org.example.entities.Manager;
 import org.example.enums.Status;
+import org.example.exceptions.InvalidStatusException;
 import org.example.service.ManagerService;
 import org.example.service.dtoConvertor.ManagerDtoConvertor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,11 +14,12 @@ import java.util.stream.Collectors;
 @RequestMapping("managers")
 public class ManagerController {
 
-    private final ManagerService managerService;
+    private final ManagerService<Manager> managerService;
 
-    private final ManagerDtoConvertor managerDtoConvertor;
+    private final ManagerDtoConvertor<Manager, ManagerDto> managerDtoConvertor;
 
-    public ManagerController(ManagerService managerService, ManagerDtoConvertor managerDtoConvertor) {
+    public ManagerController(ManagerService<Manager> managerService,
+                             ManagerDtoConvertor<Manager, ManagerDto> managerDtoConvertor) {
         this.managerService = managerService;
         this.managerDtoConvertor = managerDtoConvertor;
     }
@@ -33,10 +33,11 @@ public class ManagerController {
     }
 
     @GetMapping("/{id}")
-    public ManagerDto getById(@PathVariable(name = "id") long id) {
+    public ManagerDto getById(@PathVariable(name = "id") long id) throws InvalidStatusException {
         Manager manager = managerService.getById(id);
-        if (manager.getStatus().equals(Status.INACTIVE)) {
-            return null;
+
+        if (Status.INACTIVE == manager.getStatus()) {
+            throw new InvalidStatusException(String.format("Manager with id %d is inactive: ", manager.getId()));
         }
         return managerDtoConvertor.toDto(managerService.getById(id));
     }
@@ -47,15 +48,10 @@ public class ManagerController {
     }
 
     @PutMapping("/update/status/{id}")
-    public ResponseEntity<Manager> updateStatus(
+    public ManagerDto updateStatus(
             @PathVariable long id,
-            @RequestBody Manager manager
+            @RequestBody ManagerDto managerDot
     ) {
-        try {
-            Manager managerWithUpdateStatus = managerService.updateStatus(id, manager.getStatus());
-            return ResponseEntity.ok(managerWithUpdateStatus);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return managerDtoConvertor.toDto(managerService.updateStatus(id, managerDot.getStatus()));
     }
 }

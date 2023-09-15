@@ -11,9 +11,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import static org.example.enums.Status.ACTIVE;
 import static org.example.enums.Status.INACTIVE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,7 +30,7 @@ class ManagerServiceImplTest {
 
 
     @Test
-    void GetAll_ReturnAll() {
+    void getAll() {
         List<Manager> managers = new ArrayList<>();
         Timestamp create_at = Timestamp.valueOf("2023-08-30 20:52:00");
 
@@ -43,23 +46,35 @@ class ManagerServiceImplTest {
     }
 
     @Test
-    void getById_ReturnById() {
+    void getByIdWhenIdExists() {
 
         Manager manager = Manager.builder()
-                .id(1)
+                .id(1L)
                 .status(ACTIVE)
                 .firstName("Ihor")
                 .lastName("Hnatchenko").build();
 
-        when(managerRepository.getReferenceById(manager.getId())).thenReturn(manager);
+        when(managerRepository.findById(manager.getId())).thenReturn(Optional.of(manager));
 
-        Manager saveById = managerService.getById(1);
-
-        assertEquals(manager, saveById);
+        assertEquals(manager, managerService.getById(1));
     }
 
     @Test
-    void AddAndSave_ReturnSave() {
+    void getByIdWhenIdNotExists() {
+        Manager manager = Manager.builder()
+                .id(1L)
+                .status(ACTIVE)
+                .firstName("Ihor")
+                .lastName("Hnatchenko").build();
+
+        when(managerRepository.findById(manager.getId())).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> managerService.getById(manager.getId()));
+    }
+
+
+    @Test
+    void create() {
 
         Manager manager = Manager.builder()
                 .status(ACTIVE)
@@ -75,7 +90,7 @@ class ManagerServiceImplTest {
 
 
     @Test
-    void GetById_Save_updateStatus_ReturnWithUpdateStatus() {
+    void changeManagerStatus() {
 
         Manager manager = Manager.builder()
                 .id(1)
@@ -83,7 +98,7 @@ class ManagerServiceImplTest {
                 .firstName("Ihor")
                 .lastName("Hnatchenko").build();
 
-        when(managerRepository.getReferenceById(manager.getId())).thenReturn(manager);
+        when(managerRepository.findById(manager.getId())).thenReturn(Optional.of(manager));
 
         when(managerRepository.save(Mockito.any(Manager.class))).thenReturn(manager);
 

@@ -10,11 +10,11 @@ public class AgreementDtoConvertor<ENTITY, DTO> implements Converter<Agreement, 
 
     @Override
     public AgreementDto toDto(Agreement agreement) {
-        return new AgreementDto(agreement.getSum());
+        return new AgreementDto(agreement.getId(), agreement.getSum(), agreement.getStatus());
     }
 
     @Override
     public Agreement toEntity(AgreementDto agreementDto) {
-        return new Agreement(agreementDto.getSum());
+        return new Agreement(agreementDto.getId(), agreementDto.getSum(), agreementDto.getStatus());
     }
 }

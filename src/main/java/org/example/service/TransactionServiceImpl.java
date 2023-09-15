@@ -11,17 +11,17 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Service
-public class TransactionServiceImpl implements TransactionService {
-    private final AccountService accountService;
+public class TransactionServiceImpl implements TransactionService<Transaction> {
+    private final AccountService<Account> accountService;
 
     private final TransactionRepository transactionRepository;
 
-    private final ClientService clientService;
+    private final ClientService<Client> clientService;
 
     public TransactionServiceImpl(
-            AccountService accountService,
+            AccountService<Account> accountService,
             TransactionRepository transactionRepository,
-            ClientService clientService) {
+            ClientService<Client> clientService) {
 
         this.accountService = accountService;
         this.transactionRepository = transactionRepository;
@@ -35,7 +35,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction getById(long transactionId) {
-        return transactionRepository.getReferenceById(transactionId);
+        return transactionRepository.findById(transactionId).orElseThrow(
+                () -> new IllegalArgumentException("Incorrect manager id " + transactionId)
+        );
     }
 
     @Override

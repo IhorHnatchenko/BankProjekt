@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "agreements")
 public class Agreement {
@@ -26,8 +28,10 @@ public class Agreement {
 
     private BigDecimal sum;
 
-    public Agreement(BigDecimal sum) {
+    public Agreement(long id, BigDecimal sum, Status status) {
+        this.id = id;
         this.sum = sum;
+        this.status = status;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
