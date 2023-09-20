@@ -36,6 +36,8 @@ public class SecurityConfig {
     public JdbcUserDetailsManager user() {
         return new JdbcUserDetailsManager(dataSource);
     }
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -43,6 +45,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         (authorize) -> authorize
                                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+                                //.requestMatchers("/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll()
                                 .requestMatchers("/clients").permitAll()
                                 .anyRequest().authenticated())
                 .httpBasic()

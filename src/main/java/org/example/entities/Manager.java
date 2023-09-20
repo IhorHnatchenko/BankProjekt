@@ -46,6 +46,13 @@ public class Manager {
         this.lastName = lastName;
     }
 
+    public Manager(long id, Status status, String firstName, String lastName, Timestamp createAt, Timestamp updateAt) {
+        this.id = id;
+        this.status = status;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public Manager(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;

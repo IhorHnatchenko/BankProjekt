@@ -82,4 +82,15 @@ public class Client {
     @JsonIgnore
     private List<Account> accounts = new ArrayList<>();
 
+    public Client(long id, Status status, String taxCode, String firstName, String lastName, String email, String password, String address, int phone) {
+        this.id = id;
+        this.status = status;
+        this.taxCode = taxCode;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+        this.phone = phone;
+    }
 }
