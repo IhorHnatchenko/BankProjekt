@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +41,7 @@ class ManagerServiceImplTest {
 
         when(managerRepository.findAll()).thenReturn(managers);
 
-        List<Manager> savedAll = managerService.getAll();
-
-        assertEquals(managers, savedAll);
+        assertEquals(managers, managerService.getAll());
     }
 
     @Test
@@ -83,9 +82,7 @@ class ManagerServiceImplTest {
 
         when(managerRepository.save(Mockito.any(Manager.class))).thenReturn(manager);
 
-        Manager saved = managerService.save(manager);
-
-        assertEquals(manager, saved);
+        assertEquals(manager, managerService.save(manager));
     }
 
 

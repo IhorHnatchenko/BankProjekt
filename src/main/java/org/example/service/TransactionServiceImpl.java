@@ -1,5 +1,6 @@
 package org.example.service;
 
+import jakarta.transaction.Transactional;
 import org.example.entities.Account;
 import org.example.entities.Client;
 import org.example.entities.Transaction;
@@ -48,6 +49,7 @@ public class TransactionServiceImpl implements TransactionService<Transaction> {
 
 
     @Override
+    @Transactional
     public void transfer(
             long accountOneId,
             long accountTwoId,

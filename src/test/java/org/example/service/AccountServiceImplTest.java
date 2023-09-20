@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
 import static org.example.enums.Status.ACTIVE;
 import static org.example.enums.Status.INACTIVE;
 import java.math.BigDecimal;
@@ -31,9 +30,6 @@ class AccountServiceImplTest {
     @Mock
     private ClientServiceImpl clientService;
 
-    @Mock
-    private Logger logger;
-
 
     @Test
     void getAll() {
@@ -45,9 +41,7 @@ class AccountServiceImplTest {
 
         when(accountRepository.findAll()).thenReturn(accounts);
 
-        List<Account> savedAll = accountService.getAll();
-
-        assertEquals(accounts, savedAll);
+        assertEquals(accounts, accountService.getAll());
     }
 
     @Test
@@ -95,8 +89,7 @@ class AccountServiceImplTest {
 
         when(accountRepository.save(Mockito.any(Account.class))).thenReturn(account);
 
-        Account saved = accountService.save(account);
-        assertEquals(account, saved);
+        assertEquals(account, accountService.save(account));
     }
 
     @Test
@@ -155,18 +148,5 @@ class AccountServiceImplTest {
     @Test
     void drop() {
 
-/*        Account account = Account.builder()
-                .id(1L)
-                .name("Ihor")
-                .balance(BigDecimal.valueOf(500))
-                .status(ACTIVE).build();
-
-        when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
-
-        final boolean result = accountService.drop(account);
-
-        Mockito.verify(accountRepository, times(1)).delete(account);
-
-        assertTrue(result);*/
     }
 }

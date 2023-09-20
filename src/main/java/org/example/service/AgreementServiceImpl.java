@@ -4,9 +4,7 @@ import org.example.entities.Account;
 import org.example.entities.Agreement;
 import org.example.entities.Product;
 import org.example.enums.Status;
-import org.example.repository.AccountRepository;
 import org.example.repository.AgreementRepository;
-import org.example.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 

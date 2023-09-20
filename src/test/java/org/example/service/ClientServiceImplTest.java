@@ -9,9 +9,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import static org.example.enums.Status.ACTIVE;
 import static org.example.enums.Status.INACTIVE;
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,19 +42,13 @@ class ClientServiceImplTest {
 
         when(clientRepository.findAll()).thenReturn(clients);
 
-        List<Client> savedAll = clientService.getAll();
-
-        assertEquals(clients, savedAll);
+        assertEquals(clients, clientService.getAll());
     }
 
     @Test
     void getByIdWhenIdExists() {
 
-        Client client = Client.builder()
-                .id(1)
-                .status(ACTIVE)
-                .firstName("Alex")
-                .lastName("Honkaj").build();
+        Client client = Client.builder().id(1).status(ACTIVE).firstName("Alex").lastName("Honkaj").build();
 
         when(clientRepository.findById(client.getId())).thenReturn(Optional.of(client));
 
@@ -61,10 +57,7 @@ class ClientServiceImplTest {
 
     @Test
     void getByIdWhenIdNotExists() {
-        Client client = Client.builder()
-                .status(ACTIVE)
-                .firstName("Alex")
-                .lastName("Honkaj").build();
+        Client client = Client.builder().status(ACTIVE).firstName("Alex").lastName("Honkaj").build();
 
         when(clientRepository.findById(client.getId())).thenReturn(Optional.empty());
 
@@ -74,34 +67,22 @@ class ClientServiceImplTest {
     @Test
     void create() {
 
-        Manager manager = Manager.builder()
-                .id(1L)
-                .status(ACTIVE)
-                .firstName("Ihor")
-                .lastName("Hnatchenko").build();
+        Manager manager = Manager.builder().id(1L).status(ACTIVE).firstName("Ihor").lastName("Hnatchenko").build();
 
         when(managerService.getById(manager.getId())).thenReturn(manager);
 
-        Client client = Client.builder()
-                .firstName("Alex")
-                .lastName("Honkaj")
-                .manager(manager).build();
+        Client client = Client.builder().firstName("Alex").lastName("Honkaj").manager(manager).build();
 
         when(clientRepository.save(Mockito.any(Client.class))).thenReturn(client);
 
-        Client saved = clientService.save(client);
-        assertEquals(client, saved);
+        assertEquals(client, clientService.save(client));
     }
 
 
     @Test
     void updateStatus() {
 
-        Client client = Client.builder()
-                .id(1L)
-                .status(ACTIVE)
-                .firstName("Alex")
-                .lastName("Honkaj").build();
+        Client client = Client.builder().id(1L).status(ACTIVE).firstName("Alex").lastName("Honkaj").build();
 
         when(clientRepository.findById(client.getId())).thenReturn(Optional.of(client));
 
@@ -115,12 +96,7 @@ class ClientServiceImplTest {
     @Test
     void updatePhoneNumber() {
 
-        Client client = Client.builder()
-                .id(1L)
-                .status(ACTIVE)
-                .firstName("Alex")
-                .lastName("Honkaj")
-                .phone(987654321).build();
+        Client client = Client.builder().id(1L).status(ACTIVE).firstName("Alex").lastName("Honkaj").phone(987654321).build();
 
         when(clientRepository.findById(client.getId())).thenReturn(Optional.of(client));
 
@@ -135,16 +111,9 @@ class ClientServiceImplTest {
     @Test
     void changeManager() {
 
-        Manager manager = Manager.builder()
-                .id(1L)
-                .status(ACTIVE)
-                .firstName("Ihor")
-                .lastName("Hnatchenko").build();
+        Manager manager = Manager.builder().id(1L).status(ACTIVE).firstName("Ihor").lastName("Hnatchenko").build();
 
-        Client client = Client.builder()
-                .firstName("Alex")
-                .lastName("Honkaj")
-                .manager(manager).build();
+        Client client = Client.builder().firstName("Alex").lastName("Honkaj").manager(manager).build();
 
         when(clientRepository.findById(client.getId())).thenReturn(Optional.of(client));
 
@@ -158,12 +127,7 @@ class ClientServiceImplTest {
     @Test
     void changeEmail() {
 
-        Client client = Client.builder()
-                .id(1L)
-                .status(ACTIVE)
-                .firstName("Alex")
-                .lastName("Honkaj")
-                .email("Yi@gmail.com").build();
+        Client client = Client.builder().id(1L).status(ACTIVE).firstName("Alex").lastName("Honkaj").email("Yi@gmail.com").build();
 
         when(clientRepository.findById(client.getId())).thenReturn(Optional.of(client));
 
@@ -177,12 +141,7 @@ class ClientServiceImplTest {
     @Test
     void changeAddress() {
 
-        Client client = Client.builder()
-                .id(1L)
-                .status(ACTIVE)
-                .firstName("Alex")
-                .lastName("Honkaj")
-                .address("hello").build();
+        Client client = Client.builder().id(1L).status(ACTIVE).firstName("Alex").lastName("Honkaj").address("hello").build();
 
         when(clientRepository.findById(client.getId())).thenReturn(Optional.of(client));
 
@@ -196,12 +155,7 @@ class ClientServiceImplTest {
     @Test
     void getByEmailWhenEmailExists() {
 
-        Client client = Client.builder()
-                .id(1L)
-                .status(ACTIVE)
-                .firstName("Alex")
-                .lastName("Honkaj")
-                .email("Yi@gmail.com").build();
+        Client client = Client.builder().id(1L).status(ACTIVE).firstName("Alex").lastName("Honkaj").email("Yi@gmail.com").build();
 
         when(clientRepository.findByEmail(client.getEmail())).thenReturn(client);
 

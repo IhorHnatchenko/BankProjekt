@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,9 +41,8 @@ class ProductServiceImplTest {
         products.add(new Product(2L, "creditTwoForUSD", USD, 12, ACTIVE));
 
         when(productRepository.findAll()).thenReturn(products);
-        List<Product> savedAll = productService.getAll();
 
-        assertEquals(products, savedAll);
+        assertEquals(products, productService.getAll());
     }
 
     @Test
@@ -92,8 +92,7 @@ class ProductServiceImplTest {
 
         when(productRepository.save(Mockito.any(Product.class))).thenReturn(product);
 
-        Product saved = productService.save(product);
-        assertEquals(product, saved);
+        assertEquals(product, productService.save(product));
     }
 
     @Test
