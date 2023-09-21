@@ -1,6 +1,6 @@
 package org.example.entities;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -25,7 +25,6 @@ public class Transaction {
 
     private String description;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp createAt;
 
     public Transaction(long iban, BigDecimal amount, String description) {

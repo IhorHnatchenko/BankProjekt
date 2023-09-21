@@ -1,11 +1,11 @@
 package org.example.entities;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.example.enums.Currency;
 import org.example.enums.Status;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

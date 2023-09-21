@@ -3,8 +3,8 @@ package org.example.entities;
 import lombok.*;
 import org.example.enums.Currency;
 import org.example.enums.Status;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.AccountDto;
 import org.example.entities.Account;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("accounts")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "general")
 public class AccountController {
 
     private final AccountService<Account> accountService;
@@ -24,6 +26,7 @@ public class AccountController {
     private final AccountDtoConvertor accountDtoConvertor;
 
     @GetMapping
+    //@SecurityRequirement(name = "general")
     public List<AccountDto> getAll() {
         return accountService.getAll()
                 .stream()
@@ -32,6 +35,7 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
+    //@SecurityRequirement(name = "general")
     public AccountDto getById(@PathVariable(name = "id") long id) throws InvalidStatusException {
         Account account = accountService.getById(id);
         Client registeredClient = account.getRegisteredClient();
@@ -45,11 +49,13 @@ public class AccountController {
     }
 
     @PostMapping
+    //@SecurityRequirement(name = "general")
     public Account save(@RequestBody Account account) {
         return accountService.save(account);
     }
 
     @PutMapping("/update/status/{id}")
+    //@SecurityRequirement(name = "general")
     public AccountDto updateStatus(
             @PathVariable long id,
             @RequestBody AccountDto accountDto) {
@@ -58,6 +64,7 @@ public class AccountController {
     }
 
     @PutMapping("/add/amount/{id}/{amount}")
+    //@SecurityRequirement(name = "general")
     public AccountDto addAmount(
             @PathVariable long id,
             @PathVariable BigDecimal amount) {
@@ -66,6 +73,7 @@ public class AccountController {
     }
 
     @PutMapping("/subtract/amount/{id}/{amount}")
+    //@SecurityRequirement(name = "general")
     public AccountDto subtractAmount(
             @PathVariable long id,
             @PathVariable BigDecimal amount
@@ -75,6 +83,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/drop")
+    //@SecurityRequirement(name = "general")
     public void dropAccount(
             @RequestBody Account account
     ) {

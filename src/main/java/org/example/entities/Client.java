@@ -3,7 +3,8 @@ package org.example.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.example.enums.Status;
-import jakarta.persistence.*;
+
+import javax.persistence.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -43,9 +44,8 @@ public class Client {
     @Column(unique = true)
     private int phone;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp createAt;
-    @Temporal(TemporalType.TIMESTAMP)
+
     private Timestamp updateAt;
 
     public Client(String firstName, String lastName, Manager manager) {
@@ -67,6 +67,18 @@ public class Client {
         this.status = status;
         this.createAt = Timestamp.valueOf(LocalDateTime.now());
         this.updateAt = createAt;
+    }
+
+    public Client(long id, String firstName, String lastName, String email, Status status, String password, Manager manager) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.status = status;
+        this.password = password;
+        this.createAt = Timestamp.valueOf(LocalDateTime.now());
+        this.updateAt = createAt;
+        this.manager = manager;
     }
 
     @ManyToOne(cascade = CascadeType.ALL)

@@ -35,9 +35,9 @@ class ManagerServiceImplTest {
         List<Manager> managers = new ArrayList<>();
         Timestamp create_at = Timestamp.valueOf("2023-08-30 20:52:00");
 
-        managers.add(new Manager(ACTIVE, "John", "Doe", create_at, null));
-        managers.add(new Manager(ACTIVE, "Alex", "Honkaj", create_at, null));
-        managers.add(new Manager(ACTIVE, "Bob", "Marly", create_at, null));
+        managers.add(new Manager(ACTIVE, "John", "Doe"));
+        managers.add(new Manager(ACTIVE, "Alex", "Honkaj"));
+        managers.add(new Manager(ACTIVE, "Bob", "Marly"));
 
         when(managerRepository.findAll()).thenReturn(managers);
 

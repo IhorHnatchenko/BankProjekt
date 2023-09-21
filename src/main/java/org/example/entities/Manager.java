@@ -3,8 +3,9 @@ package org.example.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.example.enums.Status;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -32,10 +33,8 @@ public class Manager {
     @NotBlank
     private String lastName;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp createAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp updateAt;
 
     public Manager(Status status, String firstName, String lastName) {

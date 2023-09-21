@@ -2,8 +2,8 @@ package org.example.entities;
 
 import lombok.*;
 import org.example.enums.Status;
-import jakarta.persistence.*;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -33,9 +33,8 @@ public class Agreement {
         this.status = status;
     }
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp create_at;
-    @Temporal(TemporalType.TIMESTAMP)
+
     private Timestamp update_at;
 
     @OneToOne
