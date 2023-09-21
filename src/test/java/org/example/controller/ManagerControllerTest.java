@@ -50,14 +50,15 @@ class ManagerControllerTest {
 
         when(managerService.getAll()).thenReturn(List.of(manager));
 
-        when(converter.toDto(manager)).thenReturn(new ManagerDto(manager.getId(), manager.getFirstName(),
-                manager.getLastName(), manager.getStatus()));
+        ManagerDto managerDto = new ManagerDto(manager.getId(), manager.getFirstName(),
+                manager.getLastName(), manager.getStatus());
+
+        when(converter.toDto(manager)).thenReturn(managerDto);
 
         mockMvc.perform(get("/managers").contentType(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print())
+                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().json(asJsonString(List.of(new ManagerDto(
-                        manager.getId(), manager.getFirstName(), manager.getLastName(), manager.getStatus())))));
+                .andExpect(content().json(asJsonString(List.of(managerDto))));
     }
 
     @Test
@@ -66,14 +67,16 @@ class ManagerControllerTest {
 
         when(managerService.getById(manager.getId())).thenReturn(manager);
 
-        when(converter.toDto(manager)).thenReturn(new ManagerDto(manager.getId(), manager.getFirstName(),
-                manager.getLastName(), manager.getStatus()));
+        ManagerDto managerDto = new ManagerDto(manager.getId(), manager.getFirstName(),
+                manager.getLastName(), manager.getStatus());
+
+
+        when(converter.toDto(manager)).thenReturn(managerDto);
 
         mockMvc.perform(get("/managers/" + manager.getId()).contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(asJsonString(new ManagerDto(
-                        manager.getId(), manager.getFirstName(), manager.getLastName(), manager.getStatus()))));
+                .andExpect(status().isOk())
+                .andExpect(content().json(asJsonString(managerDto)));
     }
 
     @Test
@@ -100,7 +103,7 @@ class ManagerControllerTest {
                         .content(asJsonString(manager))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk()) // Ожидаем HTTP 201 код
+                .andExpect(status().isCreated()) // Ожидаем HTTP 201 код
                 .andExpect(jsonPath("$.status").value("ACTIVE"))
                 .andExpect(jsonPath("$.firstName").value("Alex"))
                 .andExpect(jsonPath("$.lastName").value("Alexeev"));
@@ -124,7 +127,6 @@ class ManagerControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
-                //.andExpect(jsonPath("$.status").value(INACTIVE));
     }
 
 

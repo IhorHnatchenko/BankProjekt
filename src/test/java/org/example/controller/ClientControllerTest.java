@@ -50,41 +50,18 @@ class ClientControllerTest {
 
     @Test
     void getAll() throws Exception {
-        Manager manager = new Manager(1L, ACTIVE, "Alex", "Alexeev");
 
-        Client client = new Client(
-                1L,
-                "Ihor",
-                "Hnatchenko",
-                "Ihor@gmail.com",
-                ACTIVE,
-                "1234",
-                manager);
+            Client client = new Client(1L, "Ihor", "Hnatchenko",
+                    "Ihor@gmail.com", ACTIVE);
+            when(clientService.getAll()).thenReturn(List.of(client));
+            ClientDto clientDto = new ClientDto(client.getId(), client.getFirstName(),
+                    client.getLastName(), client.getEmail(), client.getStatus());
+            when(converter.toDto(client)).thenReturn(clientDto);
 
-        when(passwordEncoder.encode(client.getPassword())).thenReturn("ZGF0dG9yZUBnbWFpbC5jb206MTIzNA==");
-
-        when(clientService.getAll()).thenReturn(List.of(client));
-
-        when(managerDtoConvertor.toDto(manager)).thenReturn(new ManagerDto(manager.getId(), manager.getFirstName(),
-                manager.getLastName(), manager.getStatus()));
-
-        when(converter.toDto(client)).thenReturn(new ClientDto(
-                client.getId(),
-                client.getFirstName(),
-                client.getLastName(),
-                client.getEmail(),
-                client.getStatus()));
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/clients").contentType(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(asJsonString(List.of(new ClientDto(
-                        client.getId(),
-                        client.getFirstName(),
-                        client.getLastName(),
-                        client.getEmail(),
-                        client.getStatus()
-                )))));
+            mockMvc.perform(MockMvcRequestBuilders.get("/clients").contentType(MediaType.APPLICATION_JSON))
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.content().json(asJsonString(List.of(clientDto))));
     }
 
     @Test

@@ -7,6 +7,7 @@ import org.example.enums.Status;
 import org.example.exceptions.InvalidStatusException;
 import org.example.service.ManagerService;
 import org.example.service.dtoConvertor.ManagerDtoConvertor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +39,7 @@ public class ManagerController {
         return managerDtoConvertor.toDto(managerService.getById(id));
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Manager save(@RequestBody Manager manager) {
         return managerService.save(manager);
