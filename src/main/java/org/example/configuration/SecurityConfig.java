@@ -1,6 +1,7 @@
 package org.example.configuration;
 
 import jakarta.servlet.DispatcherType;
+import lombok.RequiredArgsConstructor;
 import org.example.service.ClientDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,27 +17,20 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import javax.sql.DataSource;
 
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final DataSource dataSource;
 
     private final ClientDetailService clientDetailService;
 
-    @Autowired
-    public SecurityConfig(DataSource dataSource, ClientDetailService clientDetailService){
-        this.dataSource = dataSource;
-        this.clientDetailService = clientDetailService;
-    }
-
     @Bean
     public JdbcUserDetailsManager user() {
         return new JdbcUserDetailsManager(dataSource);
     }
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -62,6 +56,4 @@ public class SecurityConfig {
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(clientDetailService);
     }
-
-
 }

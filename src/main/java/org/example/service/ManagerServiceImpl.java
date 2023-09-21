@@ -1,20 +1,18 @@
 package org.example.service;
 
+import lombok.RequiredArgsConstructor;
 import org.example.entities.Manager;
 import org.example.enums.Status;
 import org.example.repository.ManagerRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
-
 @Service
+@RequiredArgsConstructor
 public class ManagerServiceImpl implements ManagerService<Manager> {
 
     private final ManagerRepository managerRepository;
-
-    public ManagerServiceImpl(ManagerRepository managerRepository) {
-        this.managerRepository = managerRepository;
-    }
 
     @Override
     public List<Manager> getAll() {
@@ -23,8 +21,9 @@ public class ManagerServiceImpl implements ManagerService<Manager> {
 
     @Override
     public Manager getById(long managerId) {
-        return managerRepository.findById(managerId).orElseThrow(
-                () -> new IllegalArgumentException("Incorrect manager id " + managerId));
+        return managerRepository
+                .findById(managerId)
+                .orElseThrow(() -> new IllegalArgumentException("Incorrect manager id " + managerId));
     }
 
     @Override

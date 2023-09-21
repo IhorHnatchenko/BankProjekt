@@ -5,6 +5,7 @@ import org.example.enums.Currency;
 import org.example.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -38,8 +39,6 @@ public class Product {
     private Timestamp createAt;
     private Timestamp updateAt;
 
-
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_manager_id", referencedColumnName = "id")
     private Manager manager;
@@ -51,5 +50,4 @@ public class Product {
         this.limitDB = limitDB;
         this.status = status;
     }
-
 }

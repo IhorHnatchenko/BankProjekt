@@ -1,24 +1,21 @@
 package org.example.service;
 
+import lombok.RequiredArgsConstructor;
 import org.example.entities.Client;
 import org.example.entities.Manager;
 import org.example.enums.Status;
 import org.example.repository.ClientRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService<Client> {
 
     private final ClientRepository clientRepository;
 
     private final ManagerService<Manager> managerService;
-
-
-    public ClientServiceImpl(ClientRepository clientRepository, ManagerService<Manager> managerService) {
-        this.clientRepository = clientRepository;
-        this.managerService = managerService;
-    }
 
     @Override
     public List<Client> getAll() {
@@ -80,11 +77,11 @@ public class ClientServiceImpl implements ClientService<Client> {
         return clientRepository.save(client);
     }
 
-        @Override
-        public Client getByEmail(String email) {
-            if (email == null || "".equals(email)) {
-                throw new IllegalArgumentException("Incorrect client email " + email);
-            }
-            return clientRepository.findByEmail(email);
+    @Override
+    public Client getByEmail(String email) {
+        if (email == null || "".equals(email)) {
+            throw new IllegalArgumentException("Incorrect client email " + email);
         }
+        return clientRepository.findByEmail(email);
+    }
 }

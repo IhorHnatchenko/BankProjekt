@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.dto.ProductDto;
 import org.example.entities.Manager;
 import org.example.entities.Product;
@@ -8,21 +9,18 @@ import org.example.exceptions.InvalidStatusException;
 import org.example.service.ProductService;
 import org.example.service.dtoConvertor.ProductDtoConvertor;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("products")
+@RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService<Product> productService;
 
-    private final ProductDtoConvertor<Product, ProductDto> productDtoConvertor;
-
-    public ProductController(ProductService<Product> productService, ProductDtoConvertor<Product, ProductDto> productDtoConvertor) {
-        this.productService = productService;
-        this.productDtoConvertor = productDtoConvertor;
-    }
+    private final ProductDtoConvertor productDtoConvertor;
 
     @GetMapping
     public List<ProductDto> getAll() {

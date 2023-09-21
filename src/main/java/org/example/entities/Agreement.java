@@ -1,9 +1,9 @@
 package org.example.entities;
 
-
 import lombok.*;
 import org.example.enums.Status;
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -19,7 +19,6 @@ public class Agreement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
 
     private BigDecimal interestRate;
 
@@ -46,5 +45,4 @@ public class Agreement {
     @OneToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
-
 }

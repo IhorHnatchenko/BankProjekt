@@ -3,7 +3,6 @@ package org.example.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.example.enums.Status;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -39,14 +38,13 @@ public class Manager {
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp updateAt;
 
-
-    public Manager(Status status, String firstName, String lastName, Timestamp createAt, Timestamp updateAt) {
+    public Manager(Status status, String firstName, String lastName) {
         this.status = status;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public Manager(long id, Status status, String firstName, String lastName, Timestamp createAt, Timestamp updateAt) {
+    public Manager(long id, Status status, String firstName, String lastName) {
         this.id = id;
         this.status = status;
         this.firstName = firstName;
@@ -74,5 +72,4 @@ public class Manager {
     @OneToMany(mappedBy = "manager")
     @JsonIgnore
     private List<Product> products = new ArrayList<>();
-
 }

@@ -1,9 +1,9 @@
 package org.example.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.dto.ClientDto;
 import org.example.dto.ManagerDto;
 import org.example.entities.Client;
-import org.example.entities.Manager;
 import org.example.enums.Status;
 import org.example.exceptions.InvalidStatusException;
 import org.example.service.ClientService;
@@ -17,26 +17,16 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("clients")
+@RequiredArgsConstructor
 public class ClientController {
 
-    private final ClientDtoConvertor<Client, ClientDto> clientDtoConverter;
+    private final ClientDtoConvertor clientDtoConverter;
 
     private final PasswordEncoder passwordEncoder;
 
     private final ClientService<Client> clientService;
 
-    private final ManagerDtoConvertor<Manager, ManagerDto> managerDtoConvertor;
-
-    public ClientController(
-            ClientService<Client> clientService,
-            ClientDtoConvertor<Client, ClientDto> clientDtoConverter,
-            PasswordEncoder passwordEncoder,
-            ManagerDtoConvertor<Manager, ManagerDto> managerDtoConvertor) {
-        this.clientService = clientService;
-        this.clientDtoConverter = clientDtoConverter;
-        this.passwordEncoder = passwordEncoder;
-        this.managerDtoConvertor = managerDtoConvertor;
-    }
+    private final ManagerDtoConvertor managerDtoConvertor;
 
     @GetMapping
     public List<ClientDto> getAll() {
@@ -59,13 +49,11 @@ public class ClientController {
     public ClientDto getByEmail(@PathVariable(name = "email") String email) throws InvalidStatusException {
         Client client = clientService.getByEmail(email);
 
-        if (Status.INACTIVE == client.getStatus()){
+        if (Status.INACTIVE == client.getStatus()) {
             throw new InvalidStatusException(String.format("Client with id %d is inactive: ", client.getId()));
         }
 
         return clientDtoConverter.toDto(client);
-
-
     }
 
     @PostMapping
@@ -82,10 +70,8 @@ public class ClientController {
 
         return clientDtoConverter
                 .toDto(clientService
-                        .updateStatus(id, clientDto
-                                .getStatus()));
+                        .updateStatus(id, clientDto.getStatus()));
     }
-
 
     @PutMapping("/change/manager/{id}")
     public ClientDto changeManager(
@@ -145,7 +131,7 @@ public class ClientController {
     public Client updateAddress(
             @PathVariable long id,
             @RequestBody Client client
-    ) throws InvalidStatusException{
+    ) throws InvalidStatusException {
 
         if (Status.INACTIVE == client.getStatus()) {
             throw new InvalidStatusException(String.format("Client with id %d is inactive: ",
@@ -153,6 +139,5 @@ public class ClientController {
         }
 
         return clientService.changeAddress(id, client.getAddress());
-
     }
 }

@@ -5,8 +5,7 @@ import org.example.entities.Agreement;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AgreementDtoConvertor<ENTITY, DTO> implements Converter<Agreement, AgreementDto> {
-
+public class AgreementDtoConvertor implements Converter<Agreement, AgreementDto> {
 
     @Override
     public AgreementDto toDto(Agreement agreement) {

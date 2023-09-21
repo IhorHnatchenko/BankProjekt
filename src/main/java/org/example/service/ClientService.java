@@ -2,6 +2,7 @@ package org.example.service;
 
 import org.example.entities.Manager;
 import org.example.enums.Status;
+
 import java.util.List;
 
 public interface ClientService<C> {

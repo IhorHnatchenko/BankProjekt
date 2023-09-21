@@ -5,7 +5,7 @@ import org.example.entities.Client;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ClientDtoConvertor<ENTITY, DTO> implements Converter<Client, ClientDto> {
+public class ClientDtoConvertor implements Converter<Client, ClientDto> {
     @Override
     public ClientDto toDto(Client client) {
         return new ClientDto(

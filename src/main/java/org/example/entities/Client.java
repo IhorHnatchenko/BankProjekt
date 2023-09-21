@@ -3,14 +3,12 @@ package org.example.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.example.enums.Status;
-
 import jakarta.persistence.*;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 @Data
 @NoArgsConstructor
@@ -31,12 +29,10 @@ public class Client {
     @Column(unique = true)
     private String taxCode;
 
-//    @Column(name = "firstName")
     private String firstName;
 
     private String lastName;
 
-    // Use as login.
     @Column(unique = true)
     private String email;
 
@@ -76,7 +72,6 @@ public class Client {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "managerId", referencedColumnName = "id")
     private Manager manager;
-
 
     @OneToMany(mappedBy = "registeredClient")
     @JsonIgnore

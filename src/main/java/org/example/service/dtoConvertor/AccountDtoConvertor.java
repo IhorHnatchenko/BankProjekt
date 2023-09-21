@@ -5,7 +5,7 @@ import org.example.entities.Account;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AccountDtoConvertor<ENTITY, DTO> implements Converter<Account, AccountDto> {
+public class AccountDtoConvertor implements Converter<Account, AccountDto> {
 
     @Override
     public AccountDto toDto(Account account) {

@@ -1,25 +1,24 @@
 package org.example.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.dto.TransactionDto;
 import org.example.entities.Transaction;
 import org.example.service.TransactionService;
 import org.example.service.dtoConvertor.TransactionDtoConvertor;
 import org.springframework.web.bind.annotation.*;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("transfers")
+@RequiredArgsConstructor
 public class TransactionController {
+
     private final TransactionService<Transaction> transferService;
 
-    private final TransactionDtoConvertor<Transaction, TransactionDto> transactionDtoConvertor;
-
-    public TransactionController(TransactionService<Transaction> transferService, TransactionDtoConvertor<Transaction, TransactionDto> transactionDtoConvertor) {
-        this.transferService = transferService;
-        this.transactionDtoConvertor = transactionDtoConvertor;
-    }
+    private final TransactionDtoConvertor transactionDtoConvertor;
 
     @GetMapping
     public List<TransactionDto> getAll() {

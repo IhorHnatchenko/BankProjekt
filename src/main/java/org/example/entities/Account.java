@@ -48,10 +48,6 @@ public class Account {
     @OneToMany(mappedBy = "debitAccount")
     private List<Transaction> debit_transactions = new ArrayList<>();
 
-
     @OneToMany(mappedBy = "creditAccount")
     private List<Transaction> credit_transactions = new ArrayList<>();
-
-
-
 }

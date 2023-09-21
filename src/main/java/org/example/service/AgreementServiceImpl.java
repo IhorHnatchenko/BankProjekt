@@ -1,14 +1,17 @@
 package org.example.service;
 
+import lombok.RequiredArgsConstructor;
 import org.example.entities.Account;
 import org.example.entities.Agreement;
 import org.example.entities.Product;
 import org.example.enums.Status;
 import org.example.repository.AgreementRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AgreementServiceImpl implements AgreementService<Agreement> {
 
     private final AgreementRepository agreementRepository;
@@ -17,16 +20,6 @@ public class AgreementServiceImpl implements AgreementService<Agreement> {
 
     private final ProductService<Product> productService;
 
-    public AgreementServiceImpl(
-            AgreementRepository agreementRepository,
-            AccountService<Account> accountService,
-            ProductService<Product> productService) {
-        this.agreementRepository = agreementRepository;
-        this.accountService = accountService;
-        this.productService = productService;
-    }
-
-
     @Override
     public List<Agreement> getAll() {
         return agreementRepository.findAll();
@@ -34,20 +27,20 @@ public class AgreementServiceImpl implements AgreementService<Agreement> {
 
     @Override
     public Agreement getById(long agreementId) {
-        return agreementRepository.findById(agreementId).orElseThrow(
-                () -> new IllegalArgumentException("Incorrect agreement id " + agreementId)
-        );
+        return agreementRepository
+                .findById(agreementId)
+                .orElseThrow(() -> new IllegalArgumentException("Incorrect agreement id " + agreementId));
     }
 
     @Override
     public Agreement save(Agreement agreement) {
 
-            Account account = accountService.getById(agreement.getAccount().getId());
-            Product product = productService.getById(agreement.getProduct().getId());
-            agreement.setAccount(account);
-            agreement.setProduct(product);
+        Account account = accountService.getById(agreement.getAccount().getId());
+        agreement.setAccount(account);
+        Product product = productService.getById(agreement.getProduct().getId());
+        agreement.setProduct(product);
 
-            return agreementRepository.save(agreement);
+        return agreementRepository.save(agreement);
     }
 
     @Override

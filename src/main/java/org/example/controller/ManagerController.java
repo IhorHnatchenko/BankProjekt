@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.dto.ManagerDto;
 import org.example.entities.Manager;
 import org.example.enums.Status;
@@ -12,17 +13,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("managers")
+@RequiredArgsConstructor
 public class ManagerController {
 
     private final ManagerService<Manager> managerService;
 
-    private final ManagerDtoConvertor<Manager, ManagerDto> managerDtoConvertor;
-
-    public ManagerController(ManagerService<Manager> managerService,
-                             ManagerDtoConvertor<Manager, ManagerDto> managerDtoConvertor) {
-        this.managerService = managerService;
-        this.managerDtoConvertor = managerDtoConvertor;
-    }
+    private final ManagerDtoConvertor managerDtoConvertor;
 
     @GetMapping
     public List<ManagerDto> getAll() {

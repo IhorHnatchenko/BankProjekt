@@ -4,9 +4,8 @@ import org.example.dto.ProductDto;
 import org.example.entities.Product;
 import org.springframework.stereotype.Component;
 
-
 @Component
-public class ProductDtoConvertor<ENTITY, DTO> implements Converter<Product, ProductDto> {
+public class ProductDtoConvertor implements Converter<Product, ProductDto> {
 
     @Override
     public ProductDto toDto(Product product) {

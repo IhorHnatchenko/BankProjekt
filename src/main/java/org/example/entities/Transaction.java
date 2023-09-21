@@ -2,6 +2,7 @@ package org.example.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -18,17 +19,14 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long iban;
 
-
     private int type;
 
     private BigDecimal amount;
-
 
     private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp createAt;
-
 
     public Transaction(long iban, BigDecimal amount, String description) {
         this.iban = iban;
@@ -62,7 +60,4 @@ public class Transaction {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "credit_account_id", referencedColumnName = "id")
     private Account creditAccount;
-
-
-
 }

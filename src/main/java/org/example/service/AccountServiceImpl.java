@@ -1,5 +1,6 @@
 package org.example.service;
 
+import lombok.RequiredArgsConstructor;
 import org.example.entities.Account;
 import org.example.entities.Client;
 import org.example.enums.Status;
@@ -7,10 +8,12 @@ import org.example.repository.AccountRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService<Account> {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
@@ -19,11 +22,6 @@ public class AccountServiceImpl implements AccountService<Account> {
 
     private final ClientService<Client> clientService;
 
-    public AccountServiceImpl(AccountRepository accountRepository, ClientService<Client> clientService) {
-        this.accountRepository = accountRepository;
-        this.clientService = clientService;
-    }
-
     @Override
     public List<Account> getAll() {
         return accountRepository.findAll();
@@ -31,9 +29,9 @@ public class AccountServiceImpl implements AccountService<Account> {
 
     @Override
     public Account getById(long accountId) {
-        return accountRepository.findById(accountId).orElseThrow(
-                () -> new IllegalArgumentException("Incorrect account id " + accountId)
-        );
+        return accountRepository
+                .findById(accountId)
+                .orElseThrow(() -> new IllegalArgumentException("Incorrect account id " + accountId));
     }
 
     @Override
@@ -78,7 +76,7 @@ public class AccountServiceImpl implements AccountService<Account> {
 
     @Override
     public void drop(Account account) {
-        if(account.getBalance().compareTo(BigDecimal.ONE) > 0){
+        if (account.getBalance().compareTo(BigDecimal.ONE) > 0) {
             logger.info("I drop your money.");
         }
         accountRepository.delete(account);

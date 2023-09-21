@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class TransactionLogger {
 
-
-
     @Around(value = "execution(* org.example.service.TransactionServiceImpl.*(..))")
     public Object aroundAdvice(ProceedingJoinPoint proceedingJoinPoint) {
 

@@ -5,7 +5,7 @@ import org.example.entities.Transaction;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TransactionDtoConvertor<ENTITY, DTO> implements Converter<Transaction, TransactionDto> {
+public class TransactionDtoConvertor implements Converter<Transaction, TransactionDto> {
     @Override
     public TransactionDto toDto(Transaction transaction) {
         return new TransactionDto(transaction.getIban(), transaction.getAmount(), transaction.getDescription());

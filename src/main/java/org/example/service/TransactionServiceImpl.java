@@ -1,33 +1,22 @@
 package org.example.service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.example.entities.Account;
-import org.example.entities.Client;
 import org.example.entities.Transaction;
 import org.example.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService<Transaction> {
     private final AccountService<Account> accountService;
 
     private final TransactionRepository transactionRepository;
-
-    private final ClientService<Client> clientService;
-
-    public TransactionServiceImpl(
-            AccountService<Account> accountService,
-            TransactionRepository transactionRepository,
-            ClientService<Client> clientService) {
-
-        this.accountService = accountService;
-        this.transactionRepository = transactionRepository;
-        this.clientService = clientService;
-    }
 
     @Override
     public List<Transaction> getAll() {
@@ -36,9 +25,9 @@ public class TransactionServiceImpl implements TransactionService<Transaction> {
 
     @Override
     public Transaction getById(long transactionId) {
-        return transactionRepository.findById(transactionId).orElseThrow(
-                () -> new IllegalArgumentException("Incorrect manager id " + transactionId)
-        );
+        return transactionRepository
+                .findById(transactionId)
+                .orElseThrow(() -> new IllegalArgumentException("Incorrect manager id " + transactionId));
     }
 
     @Override
@@ -47,15 +36,14 @@ public class TransactionServiceImpl implements TransactionService<Transaction> {
     }
 
 
-
     @Override
     @Transactional
     public void transfer(
             long accountOneId,
             long accountTwoId,
             BigDecimal balance,
-            String description)
-            throws IllegalAccessException {
+            String description
+    ) throws IllegalAccessException {
 
         Account accountOne = accountService.getById(accountOneId);
         Account accountTwo = accountService.getById(accountTwoId);
