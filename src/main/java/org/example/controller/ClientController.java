@@ -9,6 +9,7 @@ import org.example.exceptions.InvalidStatusException;
 import org.example.service.ClientService;
 import org.example.service.dtoConvertor.ClientDtoConvertor;
 import org.example.service.dtoConvertor.ManagerDtoConvertor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,6 +57,7 @@ public class ClientController {
         return clientDtoConverter.toDto(client);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Client save(@RequestBody Client client) {
         client.setPassword(passwordEncoder.encode(client.getPassword()));

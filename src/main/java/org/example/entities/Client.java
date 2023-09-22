@@ -54,6 +54,12 @@ public class Client {
         this.manager = manager;
     }
 
+    public Client(String firstName, String lastName, Status status) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.status = status;
+    }
+
     public Client(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;

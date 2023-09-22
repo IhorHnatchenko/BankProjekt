@@ -3,6 +3,7 @@ package org.example.entities;
 import lombok.*;
 import org.example.enums.Currency;
 import org.example.enums.Status;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
@@ -49,5 +50,20 @@ public class Product {
         this.currencyCode = currencyCode;
         this.limitDB = limitDB;
         this.status = status;
+    }
+    public Product(String name, Currency currencyCode, int limitDB, Status status) {
+        this.name = name;
+        this.currencyCode = currencyCode;
+        this.limitDB = limitDB;
+        this.status = status;
+    }
+
+    public Product(long id, String name, Currency currencyCode, int limitDB, Status status, Manager manager) {
+        this.id = id;
+        this.name = name;
+        this.currencyCode = currencyCode;
+        this.limitDB = limitDB;
+        this.status = status;
+        this.manager = manager;
     }
 }

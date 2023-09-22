@@ -8,6 +8,7 @@ import org.example.enums.Status;
 import org.example.exceptions.InvalidStatusException;
 import org.example.service.ProductService;
 import org.example.service.dtoConvertor.ProductDtoConvertor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class ProductController {
         return productDtoConvertor.toDto(productService.getById(id));
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Product save(@RequestBody Product product) {
         return productService.save(product);
